@@ -12,7 +12,6 @@ PATH
   remote: ../movie_spider
   specs:
     movie_spider (0.1.0)
-      capybara-webkit
       micro_spider
       rspec
       spreadsheet
@@ -66,10 +65,6 @@ GEM
       sass (>= 3.2.19)
     bson (2.3.0)
     builder (3.2.2)
-    byebug (3.5.1)
-      columnize (~> 0.8)
-      debugger-linecache (~> 1.2)
-      slop (~> 3.6)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -79,9 +74,6 @@ GEM
     capybara-mechanize (1.4.0)
       capybara (~> 2.4.4)
       mechanize (~> 2.7.0)
-    capybara-webkit (1.4.1)
-      capybara (>= 2.3.0, < 2.5.0)
-      json
     chronic (0.10.2)
     chunky_png (1.3.4)
     coderay (1.1.0)
@@ -92,7 +84,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1)
-    columnize (0.9.0)
     compass (1.0.3)
       chunky_png (~> 1.2)
       compass-core (~> 1.0.2)
@@ -111,7 +102,6 @@ GEM
       sprockets (< 2.13)
     connection_pool (2.1.1)
     debug_inspector (0.0.2)
-    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     domain_name (0.5.23)
       unf (>= 0.0.5, < 1.0.0)
@@ -278,7 +268,6 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   bootstrap-sass
-  byebug
   coffee-rails (~> 4.1.0)
   compass-rails
   font-awesome-sass
