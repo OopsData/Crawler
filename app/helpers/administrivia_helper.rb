@@ -1,0 +1,2 @@
+module AdministriviaHelper
+end

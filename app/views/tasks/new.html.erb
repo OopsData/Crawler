@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-xs-2  sidebar">
+        <ul class="nav nav-sidebar">
+          <li class="<%= current_sub_tab?('tasks','index','video')%>">
+            <a href="/">视频任务列表</a>
+          </li>
+          <li class="<%= current_sub_tab?('tasks','index','news')%>">
+            <a href="/tasks?type=news">新闻任务列表</a>
+          </li>          
+          <li class="<%= current_sub_tab?('tasks','new','video')%>"><a href="/tasks/new?type=video">新建视频任务</a></li>
+          <li class="<%= current_sub_tab?('tasks','new','news')%>"><a href="/tasks/new?type=news">新建新闻任务</a></li>
+        </ul>
+      </div> 
+      <div class="col-xs-10  main">
+          <h2 class="sub-header">添加新任务</h2>
+          <% if params[:type] == 'video'%>
+          <h3>格式(电影名称::网址),可以一次添加多个电影</h3>
+            <%= render 'video_form' %>
+          <% else %>
+            <%= render 'news_form' %>
+          <% end %>
+      </div>    
+  </div>
+</div> 

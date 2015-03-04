@@ -1,0 +1,23 @@
+<%= form_for(@task,:html =>{:class => 'form-horizontal'}) do |f| %>
+  <input type="hidden" name="task[type]" value="news">
+  <div class="form-group">
+    <div class="col-xs-10">
+      <label>关键词:</label>
+      <%= f.text_field :keyword,:class => 'form-control' %>
+    </div>
+    <div class="col-xs-10">
+      <label>开始时间:</label>
+      <%= f.text_field :start_date,:class => 'form-control', :id=> "start_date"%>
+    </div>    
+    <div class="col-xs-10">
+      <label>结束时间:</label>
+      <%= f.text_field :end_date,:class => 'form-control', :id=> "end_date"%>
+    </div>
+
+  </div>
+  <div class="form-group">
+    <div class="col-xs-offset-2 col-xs-10">
+      <%= f.submit '确定',:class => 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

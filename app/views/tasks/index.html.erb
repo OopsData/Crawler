@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-xs-2  sidebar">
+        <ul class="nav nav-sidebar">
+          <li class="<%= current_sub_tab?('tasks','index','video')%>">
+            <a href="/">视频任务列表</a>
+          </li>
+          <li class="<%= current_sub_tab?('tasks','index','news')%>">
+            <a href="/tasks?type=news">新闻任务列表</a>
+          </li>          
+          <li class="<%= current_sub_tab?('tasks','new','video')%>"><a href="/tasks/new?type=video">新建视频任务</a></li>
+          <li class="<%= current_sub_tab?('tasks','new','news')%>"><a href="/tasks/new?type=news">新建新闻任务</a></li>
+        </ul>
+      </div> 
+      <% if params[:type] == 'video'%>
+        <div class="col-xs-10  main">
+            <h2 class="sub-header">包括了豆瓣、土豆、优酷、腾讯视频、爱奇艺网站的爬取任务</h2>
+            <form class="form-inline search_form" action='/tasks' method='get'>
+              <div class="form-group">
+                <input type="text" class="form-control" id="movie_name" placeholder="电影名称" name='name' vlaue="<%=params[:name]%>">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="start_date" placeholder="开始时间" name='start_date' vlaue="<%=params[:start_date]%>">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="end_date" placeholder="结束时间" name='end_date' vlaue="<%=params[:end_date]%>">
+              </div>
+  
+              <button type="submit" class="btn btn-default">查询</button>
+            </form>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>电影名称</th>
+                    <th>网站</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if @tasks.length > 0 %>
+                    <% @tasks.each do |task|%>
+                      <tr>
+                        <td><%= task.title %></td>
+                        <td><%= task.site  %></td>
+                        <td><%= task.created_at.strftime('%F')%></td>
+                        <td>
+                          <% if task.status == Task::ENABLE %>
+                            <button type="button" class='btn btn-warning task' id="<%= task.id.to_s%>">可禁用</button>
+                          <% else %>
+                            <button type="button" class='btn btn-success task' id="<%= task.id.to_s%>">可启用</button>
+                          <% end %>
+                          
+                        </td>
+                        <td>
+                          <%= link_to '删除', task, method: :delete,:class => 'btn btn-danger', data: { confirm: '确定要删除么?' } %>
+                        </td>
+                      </tr>                    
+                    <% end %> 
+                  <% else %>
+                    <tr>
+                      <td colspan="4" align="center">还没有任何要执行的任务</td>
+                    </tr>                               
+                  <% end %>
+                </tbody>
+              </table>
+              <div class="pull-right"><%= paginate @tasks %></div>
+            </div>
+        </div>
+      <% else %>
+        <div class="col-xs-10  main">
+            <h2 class="sub-header">百度新闻网站的爬取任务</h2>
+            <form class="form-inline search_form" action='/tasks' method='get'>
+              <div class="form-group">
+                <input type="text" class="form-control" id="movie_name" placeholder="关键字" name='name' vlaue="<%=params[:name]%>">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="start_date" placeholder="开始时间" name='start_date' vlaue="<%=params[:start_date]%>">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="end_date" placeholder="结束时间" name='end_date' vlaue="<%=params[:end_date]%>">
+              </div>
+  
+              <button type="submit" class="btn btn-default">查询</button>
+            </form>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>关键字</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if @tasks.length > 0 %>
+                    <% @tasks.each do |task|%>
+                      <tr>
+                        <td><%= task.keyword  %></td>
+                        <td><%= task.created_at.strftime('%F')%></td>
+                        <td>
+                          <% if task.status == Task::ENABLE %>
+                            <button type="button" class='btn btn-warning task' id="<%= task.id.to_s%>">可禁用</button>
+                          <% else %>
+                            <button type="button" class='btn btn-success task' id="<%= task.id.to_s%>">可启用</button>
+                          <% end %>
+                          
+                        </td>
+                        <td>
+                          <%= link_to '删除', task, method: :delete,:class => 'btn btn-danger', data: { confirm: '确定要删除么?' } %>
+                        </td>
+                      </tr>                    
+                    <% end %> 
+                  <% else %>
+                    <tr>
+                      <td colspan="4" align="center">还没有任何要执行的任务</td>
+                    </tr>                               
+                  <% end %>
+                </tbody>
+              </table>
+              <div class="pull-right"><%= paginate @tasks %></div>
+            </div>
+        </div>
+      <% end %>
+    
+  </div>
+</div> 
+
+
+
+
+
+              

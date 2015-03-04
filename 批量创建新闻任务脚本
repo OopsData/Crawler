@@ -1,0 +1,31 @@
+#注意需要替换开始日期、结束日期及关键字
+
+arr = []
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'霍比特人3'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'坚不可摧 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'时光大战 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'有种你爱我 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'一路惊喜 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'神探驾到 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'海面宝宝3D 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'小羊肖恩 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'蜡笔总动员 电影'}
+arr <<  {start_date:'2014-12-15',end_date:'2015-2-28',keyword:'饥饿游戏3 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'新年行动 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'王牌特工 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'五十度灰 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'吉星高照2015 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'甜蜜蜜 电影'}
+arr <<  {start_date:'2015-12-15',end_date:'2015-2-28',keyword:'有一个地方只有我们知道 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'十二金鸭 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'澳门风云2 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'冲上云霄 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'爸爸的假期 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'天降雄师 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'钟馗伏魔 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'狼图腾 电影'}
+arr <<  {start_date:'2015-1-1',end_date:'2015-3-3',keyword:'爸爸去哪儿2 电影'}
+
+arr.each do |hash|
+  Task.create(keyword:hash[:keyword],start_date:hash[:start_date],end_date:hash[:end_date],type:'news',status:1)
+end
