@@ -69,7 +69,8 @@ class Task
     tasks =  self.where(status:ENABLE,type:'news')
     tasks.map(&:keyword).each do |kwd|
       tasks.where(keyword:kwd).each do |task|
-        baidu  = MovieSpider::Baidu.new(task.keyword,task.start_date,task.end_date)
+        #每天后半夜爬取截止到前一天的数据
+        baidu  = MovieSpider::Baidu.new(task.keyword,task.start_date,(Date.today - 1.days).strftime('%Y-%-m-%-d'))
         data   = baidu.get_news_list
         data.each do |d|
           ns = Administrivium.create(keyword:task.keyword,title:d[:title],link:d[:link],time:d[:time],start_date:task.start_date,end_date:task.end_date,num:d[:num],media:d[:media],reps:d[:reps],summary:d[:summary])
