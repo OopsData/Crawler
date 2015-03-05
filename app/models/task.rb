@@ -55,7 +55,7 @@ class Task
         }
       end
       threads.each { |thr| thr.join }
-      puts '*************** one movie finished ***************'
+      Rails.logger.info '*************** one movie finished ***************'
       # movie.runing_tudou_tasks
       # movie.runing_youku_tasks
       # movie.runing_tecent_tasks

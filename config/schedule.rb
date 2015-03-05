@@ -33,7 +33,7 @@ when 'production'
 	#   runner "Task.runing_news_tasks"
 	# end
 when 'development'
-	every 1.day, :at => '12:41 pm' do
+	every 1.day, :at => '13:21 pm' do
 	  runner "Task.runing_movie_tasks"
 	end
 	
