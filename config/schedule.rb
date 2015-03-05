@@ -25,7 +25,7 @@ set :output, {
 
 case @environment
 when 'production'
-	every 1.day, :at => '11:30 am' do
+	every 1.day, :at => '12:31 am' do
 	  runner "Task.runing_movie_tasks"
 	end
 	
@@ -33,7 +33,7 @@ when 'production'
 	#   runner "Task.runing_news_tasks"
 	# end
 when 'development'
-	every 1.day, :at => '1:00 am' do
+	every 1.day, :at => '12:41 pm' do
 	  runner "Task.runing_movie_tasks"
 	end
 	
