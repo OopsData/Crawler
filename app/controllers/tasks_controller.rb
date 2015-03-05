@@ -24,7 +24,7 @@ class TasksController < ApplicationController
     if params[:end_date].present?
       @tasks = @tasks.where(:created_at.lte => Date.parse(params[:end_date]))
     end
-    @tasks = @tasks.asc(:created_at).page(page).per(50)
+    @tasks = @tasks.asc(:created_at).page(page).per(100)
     
   end
 
