@@ -25,7 +25,7 @@ set :output, {
 
 case @environment
 when 'production'
-	every 1.day, :at => '1:00 am' do
+	every 1.day, :at => '11:30 am' do
 	  runner "Task.runing_movie_tasks"
 	end
 	
