@@ -57,3 +57,4 @@ gem 'kaminari'
 gem 'whenever', :require => false
 gem 'movie_spider', :path => "../movie_spider"
 gem 'jquery-turbolinks'
+gem 'grape'

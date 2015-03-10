@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  mount Tieba::API => '/'
   resources :administrivia
 
   root 'tasks#index'
@@ -11,8 +11,6 @@ Rails.application.routes.draw do
       get 'able'
     end
   end
-
-  resources :tiebas
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
