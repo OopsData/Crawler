@@ -4,7 +4,7 @@ class TiebasController < ApplicationController
 		rack_input = env["rack.input"].read
       	params = Rack::Utils.parse_query(rack_input, "&")		
 		Rails.logger.info('=======================================')
-		Rails.logger.info(Json.parse(params).inspect)
+		Rails.logger.info(JSON.parse(params).inspect)
 		Rails.logger.info('=======================================')
 	end
 end
