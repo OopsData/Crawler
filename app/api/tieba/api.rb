@@ -7,9 +7,9 @@ module Tieba
 
     resource :tiebas do
       post :receive_data do
-        Rails.logger.info('=============================')
-        Rails.logger.info(params.inspect)
-        Rails.logger.info('=============================')
+        puts '================================'
+        puts params.inspect
+        puts '================================'
       end
     end
   end
