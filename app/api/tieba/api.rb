@@ -10,9 +10,10 @@ module Tieba
         Rails.logger.info 'dddddddddddddddddd'
       end
       post :receive_data do
-        Rails.logger.info '================================'
-        Rails.logger.info params.inspect
-        Rails.logger.info '================================'
+        params[:info].each do |data|
+          Rails.logger.info data.inspect
+          Rails.logger.info '================================'
+        end
       end
     end
   end
