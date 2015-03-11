@@ -12,7 +12,7 @@ module Tieba
       post :receive_data do
         #data_arr  = eval(params[:data])
         Rails.logger.info('=========================================')
-        Rails.logger.info params[:data].inspect
+        Rails.logger.info params.inspect
         Rails.logger.info('=========================================')
         # data_arr.each do |hash|
         #   puts hash[:title]
