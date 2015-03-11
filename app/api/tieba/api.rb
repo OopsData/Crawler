@@ -10,8 +10,8 @@ module Tieba
         Rails.logger.info 'dddddddddddddddddd'
       end
       post :receive_data do
-        data_arr = JSON.parse(params[:data])
-        data_arr.each do |hash|
+        #data_arr = JSON.parse(params[:data])
+        params[:data].each do |hash|
           puts hash[:title]
           puts hash[:author]
           puts hash[:created]
