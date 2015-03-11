@@ -11,7 +11,7 @@ module Tieba
       end
       post :receive_data do
         Rails.logger.info '================================'
-        Rails.logger.info JSON.parse(params[:info])
+        Rails.logger.info params.inspect
         Rails.logger.info '================================'
         # params[:info].each do |data|
         #   Rails.logger.info data.inspect
