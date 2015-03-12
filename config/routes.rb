@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  mount Tieba::API => '/'
   resources :administrivia
 
   root 'tasks#index'

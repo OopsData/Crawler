@@ -5,6 +5,48 @@ class Task
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  #TODO 这个是为4月份的颁奖晚会准备的数据,这里写成了常量,有待优化,应实现动态添加
+  TIEBA_STAR = [
+    "tfboys" => {link:'http://tieba.baidu.com/f?kw=tfboys&ie=utf-8&tp=0'},
+    "陈柏霖" => {link:'http://tieba.baidu.com/f?ie=utf-8&kw=%E9%99%88%E6%9F%8F%E9%9C%96'},
+    "陈赫" => {link:'http://tieba.baidu.com/f?kw=%E9%99%88%E8%B5%AB&ie=utf-8&tp=0'},
+    "陈伟霆" => {link:'http://tieba.baidu.com/f?kw=%E9%99%88%E4%BC%9F%E9%9C%86&ie=utf-8'},
+    "陈晓" => {link:'http://tieba.baidu.com/f?kw=%E9%99%88%E6%99%93&ie=utf-8&tp=0'},
+    "陈学冬" => {link:'http://tieba.baidu.com/f?kw=%E9%99%88%E5%AD%A6%E5%86%AC&ie=utf-8&tp=0'},
+    "邓超" => {link:'http://tieba.baidu.com/f?kw=%E9%82%93%E8%B6%85&ie=utf-8&tp=0'},
+    "范冰冰" => {link:'http://tieba.baidu.com/f?kw=%E8%8C%83%E5%86%B0%E5%86%B0&ie=utf-8&tp=0'},
+    "冯绍峰" => {link:'http://tieba.baidu.com/f?kw=%E5%86%AF%E7%BB%8D%E5%B3%B0&ie=utf-8&tp=0'},
+    "高圆圆" => {link:'http://tieba.baidu.com/f?kw=%E9%AB%98%E5%9C%86%E5%9C%86&ie=utf-8&tp=0'},
+    "韩寒" => {link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0'},
+    "黄渤" => {link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E6%B8%A4&ie=utf-8&tp=0'},
+    "黄晓明" => {link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E6%99%93%E6%98%8E&ie=utf-8&tp=0'},
+    "黄轩" => {link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E8%BD%A9&ie=utf-8&tp=0'},
+    "李易峰" => {link:'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%98%93%E5%B3%B0&ie=utf-8&tp=0'},
+    "林更新" => {link:'http://tieba.baidu.com/f?kw=%E6%9E%97%E6%9B%B4%E6%96%B0&ie=utf-8&tp=0'},
+    "刘诗诗" => {link:'http://tieba.baidu.com/f?kw=%E5%88%98%E8%AF%97%E8%AF%97&ie=utf-8&tp=0'},
+    "刘亦菲" => {link:'http://tieba.baidu.com/f?kw=%E5%88%98%E4%BA%A6%E8%8F%B2&ie=utf-8&tp=0'},
+    "鹿晗" => {link:'http://tieba.baidu.com/f?kw=%E9%B9%BF%E6%99%97&ie=utf-8&tp=0'},
+    "倪妮" => {link:'http://tieba.baidu.com/f?kw=%E5%80%AA%E5%A6%AE&ie=utf-8&tp=0'},
+    "欧豪" => {link:'http://tieba.baidu.com/f?kw=%E6%AC%A7%E8%B1%AA&ie=utf-8&tp=0'},
+    "彭于晏" => {link:'http://tieba.baidu.com/f?kw=%E5%BD%AD%E4%BA%8E%E6%99%8F&ie=utf-8&tp=0'},
+    "汤唯" => {link:'http://tieba.baidu.com/f?kw=%E6%B1%A4%E5%94%AF&ie=utf-8&tp=0'},
+    "佟丽娅" => {link:'http://tieba.baidu.com/f?kw=%E4%BD%9F%E4%B8%BD%E5%A8%85&ie=utf-8&tp=0'},
+    "王宝强" => {link:'http://tieba.baidu.com/f?kw=%E7%8E%8B%E5%AE%9D%E5%BC%BA&ie=utf-8&tp=0'},
+    "吴亦凡" => {link:'http://tieba.baidu.com/f?kw=%E5%90%B4%E4%BA%A6%E5%87%A1&ie=utf-8&tp=0'},
+    "谢依霖" => {link:'http://tieba.baidu.com/f?kw=%E8%B0%A2%E4%BE%9D%E9%9C%96&ie=utf-8'},
+    "杨幂" => {link:'http://tieba.baidu.com/f?kw=%E6%9D%A8%E5%B9%82&ie=utf-8&tp=0'},
+    "杨洋" => {link:'http://tieba.baidu.com/f?kw=%E6%9D%A8%E6%B4%8B&ie=utf-8&tp=0'},
+    "杨颖" => {link:'http://tieba.baidu.com/f?kw=angelababy&ie=utf-8&tp=0'},
+    "袁泉" => {link:'http://tieba.baidu.com/f?kw=%E8%A2%81%E6%B3%89&ie=utf-8&tp=0'},
+    "赵薇" => {link:'http://tieba.baidu.com/f?kw=%E8%B5%B5%E8%96%87&ie=utf-8&tp=0'},
+    "赵又廷" => {link:'http://tieba.baidu.com/f?kw=%E8%B5%B5%E5%8F%88%E5%BB%B7&ie=utf-8&tp=0'},
+    "郑恺" => {link:'http://tieba.baidu.com/f?kw=%E9%83%91%E6%81%BA&ie=utf-8&tp=0'},
+    "钟汉良" => {link:'http://tieba.baidu.com/f?kw=%E9%92%9F%E6%B1%89%E8%89%AF&ie=utf-8&tp=0'},
+    "周冬雨" => {link:'http://tieba.baidu.com/f?kw=%E5%91%A8%E5%86%AC%E9%9B%A8&ie=utf-8&tp=0'},
+    "周迅" => {link:'http://tieba.baidu.com/f?kw=%E5%91%A8%E8%BF%85&ie=utf-8&tp=0'},
+    "李晨" => {link:'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%99%A8&ie=utf-8&tp=0'}
+  ]
+
   ENABLE  = 1
   DISABLE = 0
   SITE_ARR = ['tudou','youku','tecent','iqiyi']
@@ -101,6 +143,32 @@ class Task
     generage_star_excel(hash)
   end
 
+  def self.runing_tieba_tasks
+    threads = []
+    TIEBA_STAR.each do |star|
+      threads   << Thread.new{
+        name    = star.keys.first
+        link    = star.values.first[:link]
+        tieba   = MovieSpider::Tieba.new(link,'/Users/x/cookies.txt')
+        results = tieba.get_info
+        focus   = results # number #关注数
+        results = results.last # Array
+        tiebas  = []
+        results.each do |result|
+          info  = {star:name,created:result[:created],author:result[:author],title:result[:title]}
+          tieba = TiebaInfo.where(info).first
+          info.merge!({reply:result[:comment],focus:focus})
+          if tieba.present?
+            tieba.update_attributes(info)
+          else
+            tieba = TiebaInfo.create(info)
+          end
+            tiebas << tieba.id.to_s
+        end
+        generate_tieba_excel(name,tiebas)
+      }      
+    end
+  end
 
   def self.generage_news_excel(result)
     book   = Spreadsheet::Workbook.new
@@ -205,6 +273,22 @@ class Task
       end
     end
     book.write Rails.root.to_s + '/public/export/' + "stars_data.xls"    
+  end
+
+  def self.generate_tieba_excel(star,tiebaids)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '贴吧数据' 
+    sheet1.row(0).concat %w(明星 累计关注数  帖子创建时间  回复数  帖子创建者  标题)
+    row_count = 0
+    tiebaids.each do |tiebaid|
+      tieba_info  = TiebaInfo.find(tiebaid)
+      if tieba_info.present?
+        rw = [tieba_info.star,tieba_info.focus,tieba_info.created,ieba_info.reply,tieba_info.author,tieba_info.title]
+        sheet1.row(row_count + 1).replace(rw)
+        row_count += 1
+      end
+    end
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
   end
 
 
