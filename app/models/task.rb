@@ -145,7 +145,7 @@ class Task
       {"周迅" => 'http://tieba.baidu.com/f?kw=%E5%91%A8%E8%BF%85&ie=utf-8&tp=0'},
       {"李晨" => 'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%99%A8&ie=utf-8&tp=0'}
     ]
-    
+
     threads = []
     tieba_stars.each do |star|
       threads   << Thread.new{
@@ -159,7 +159,7 @@ class Task
         results.each do |result|
           info  = {star:name,created:result[:created],author:result[:author],title:result[:title]}
           tieba = TiebaInfo.where(info).first
-          info.merge!({reply:result[:comment],focus:focus})
+          info.merge!({reply:result[:comment].to_i,focus:focus.to_i})
           if tieba.present?
             tieba.update_attributes(info)
           else
