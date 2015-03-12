@@ -9,4 +9,4 @@ class TiebaInfo
   field :title,type: String
   field :reply,type: Integer
   field :focus, type: Integer
-ends
+end
