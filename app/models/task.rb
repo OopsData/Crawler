@@ -167,6 +167,7 @@ class Task
           end
             tiebas << tieba.id.to_s
         end
+        results = [] #释放内存
         generate_tieba_excel(name,tiebas)
         Rails.logger.info " *************** #{star} info generated ***************"
       }      
@@ -292,6 +293,7 @@ class Task
         row_count += 1
       end
     end
+    tiebaids = [] #释放内存
     book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
   end
 
