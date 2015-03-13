@@ -107,7 +107,7 @@ class Task
   #TODO 这个是为4月份的颁奖晚会准备的数据,这里写成了常量,有待优化,应实现动态添加
     tieba_stars = [
       # {"tfboys" => 'http://tieba.baidu.com/f?kw=tfboys&ie=utf-8&tp=0'},
-      # {"陈柏霖" => 'http://tieba.baidu.com/f?ie=utf-8&kw=%E9%99%88%E6%9F%8F%E9%9C%96'},
+      {"陈柏霖" => 'http://tieba.baidu.com/f?ie=utf-8&kw=%E9%99%88%E6%9F%8F%E9%9C%96'}
       # {"陈赫" => 'http://tieba.baidu.com/f?kw=%E9%99%88%E8%B5%AB&ie=utf-8&tp=0'},
       # {"陈伟霆" => 'http://tieba.baidu.com/f?kw=%E9%99%88%E4%BC%9F%E9%9C%86&ie=utf-8'},
       # {"陈晓" => 'http://tieba.baidu.com/f?kw=%E9%99%88%E6%99%93&ie=utf-8&tp=0'},
@@ -143,7 +143,7 @@ class Task
       # {"钟汉良" => 'http://tieba.baidu.com/f?kw=%E9%92%9F%E6%B1%89%E8%89%AF&ie=utf-8&tp=0'},
       # {"周冬雨" => 'http://tieba.baidu.com/f?kw=%E5%91%A8%E5%86%AC%E9%9B%A8&ie=utf-8&tp=0'},
       # {"周迅" => 'http://tieba.baidu.com/f?kw=%E5%91%A8%E8%BF%85&ie=utf-8&tp=0'},
-      {"李晨" => 'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%99%A8&ie=utf-8&tp=0'}
+      # {"李晨" => 'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%99%A8&ie=utf-8&tp=0'}
     ]
 
     threads = []
@@ -151,12 +151,13 @@ class Task
       threads   << Thread.new{
         name    = star.keys.first
         link    = star.values.first
-        tieba   = MovieSpider::Tieba.new(link,'/Users/x/cookies.txt')
+        tieba   = MovieSpider::Tieba.new(link,Rails.root.to_s + 'cookies.txt')
         results = tieba.get_info
-        focus   = results # number #关注数
+        focus   = results.first # number #关注数
         results = results.last # Array
         tiebas  = []
         results.each do |result|
+          Rails.logger.info("&&&&&&&&&&&& #{star}  循环入库中 &&&&&&&&&&&&&&&&")
           info  = {star:name,created:result[:created],author:result[:author],title:result[:title]}
           tieba = TiebaInfo.where(info).first
           info.merge!({reply:result[:comment].to_i,focus:focus.to_i})
@@ -288,7 +289,7 @@ class Task
     tiebaids.each do |tiebaid|
       tieba_info  = TiebaInfo.find(tiebaid)
       if tieba_info.present?
-        rw = [tieba_info.star,tieba_info.focus,tieba_info.created,ieba_info.reply,tieba_info.author,tieba_info.title]
+        rw = [tieba_info.star,tieba_info.focus,tieba_info.created,tieba_info.reply,tieba_info.author,tieba_info.title]
         sheet1.row(row_count + 1).replace(rw)
         row_count += 1
       end
