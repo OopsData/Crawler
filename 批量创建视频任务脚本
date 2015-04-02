@@ -1,62 +1,14 @@
 #注意替换电影名称及对应网址
 
-高手们::http://movie.douban.com/subject/25819726
-高手们::http://www.tudou.com/albumcover/967eemQFSkg.html
-高手们::http://www.youku.com/show_page/id_z908ec38ace9d11e3b8b7.html
-高手们::http://v.qq.com/detail/7/7md3yni0tv7npk2.html
-高手们::http://www.iqiyi.com/lib/m_206151814.html
-超能陆战队::http://movie.douban.com/subject/11026735
-超能陆战队::http://www.tudou.com/albumcover/xxIEeXT3nhQ.html
-超能陆战队::http://www.youku.com/show_page/id_z0d638004b91d11e29498.html
-超能陆战队::http://v.qq.com/detail/h/hjdb95f8lxcyyew.html
-超能陆战队::http://www.iqiyi.com/lib/m_205453114.html
-将错就错::http://movie.douban.com/subject/25899616
-将错就错::http://v.qq.com/detail/c/c9pb5l3ezctfbct.html
-将错就错::http://www.iqiyi.com/lib/m_206333714.html
-木星上行::http://movie.douban.com/subject/5154799
-木星上行::http://www.tudou.com/albumcover/bfDx46tiiU0.html
-木星上行::http://www.youku.com/show_page/id_z477b49eebce811e0bf93.html
-木星上行::http://v.qq.com/detail/1/1x5gu7qzl99vc42.html
-木星上行::http://www.iqiyi.com/lib/m_205027114.html
-大喜临门::http://movie.douban.com/subject/26280561
-大喜临门::http://www.tudou.com/albumcover/gOVpsCYXxOA.html
-大喜临门::http://www.youku.com/show_page/id_zb11e8e3cbe2a11e49e2a.html
-大喜临门::http://v.qq.com/detail/s/s3am9thsm9u0f3c.html
-大喜临门::http://www.iqiyi.com/lib/m_206404914.html
-北京,纽约::http://movie.douban.com/subject/24743709
-北京,纽约::http://www.tudou.com/albumcover/ISUTEfvPdTU.html
-北京,纽约::http://www.youku.com/show_page/id_z0dd30c40fa7f11e3a705.html
-北京,纽约::http://v.qq.com/detail/n/nrlm8xywzttba9u.html
-北京,纽约::http://www.iqiyi.com/lib/m_205101214.html
-战狼::http://movie.douban.com/subject/24753810
-战狼::http://www.tudou.com/albumcover/CTljiFJL6o0.html
-战狼::http://www.youku.com/show_page/id_z117b9abc00c311e38b3f.html
-战狼::http://v.qq.com/detail/1/1bnyfttijufe0cq.html
-战狼::http://www.iqiyi.com/lib/m_205375814.html
-冰雪奇缘:生日惊喜::http://movie.douban.com/subject/25977198
-冰雪奇缘:生日惊喜::http://v.qq.com/detail/f/fxth4h1ghmfvsfs.html
-灰姑娘::http://movie.douban.com/subject/6875263
-灰姑娘::http://www.tudou.com/albumcover/VxdXEopKN0s.html
-灰姑娘::http://www.youku.com/show_page/id_zdf21bdac5bbd11e38b3f.html
-灰姑娘::http://v.qq.com/detail/c/cfkrna3cypxewvb.html
-灰姑娘::http://www.iqiyi.com/lib/m_205510114.html
-飓风营救3	::http://movie.douban.com/subject/20277632
-飓风营救3	::http://www.tudou.com/albumcover/xneUKIRNYpY.html
-飓风营救3	::http://www.youku.com/show_page/id_z3192c9128fbe11e3b8b7.html
-飓风营救3	::http://v.qq.com/detail/1/1gmin6ww4zb7cj5.html
-飓风营救3	::http://www.iqiyi.com/lib/m_205514014.html
-可爱的你::http://movie.douban.com/subject/25870236
-可爱的你::http://www.tudou.com/albumcover/enEaOHzqws8.html
-可爱的你::http://www.youku.com/show_page/id_zd769b81ec18611e4b2ad.html
-可爱的你::http://v.qq.com/detail/a/ar3v9lphw893yqa.html
-可爱的你::http://www.iqiyi.com/lib/m_205914914.html
-失孤::http://movie.douban.com/subject/25835293
-失孤::http://www.tudou.com/albumcover/YxKcJae-AdM.html
-失孤::http://www.youku.com/show_page/id_z967335909de911e3a705.html
-失孤::http://v.qq.com/detail/v/v3wef8icpiwxnxk.html
-失孤::http://www.iqiyi.com/lib/m_205350714.html
-我的情敌是超人::http://movie.douban.com/subject/24875519
-我的情敌是超人::http://www.tudou.com/albumcover/L3ZCc8Vaapw.html
-我的情敌是超人::http://www.youku.com/show_page/id_zda5e3752832a11e3a705.html
-我的情敌是超人::http://v.qq.com/detail/4/49or4pcyxs0rj5h.html
-我的情敌是超人::http://www.iqiyi.com/lib/m_205357714.html
+arr = ['失眠笔记::http://movie.douban.com/subject/26353317','失眠笔记::http://www.tudou.com/albumcover/QhtRWAvBkHM.html','失眠笔记::http://www.youku.com/show_page/id_zba9caaaacc8211e4b692.html','战狼::http://movie.douban.com/subject/24753810','战狼::http://www.tudou.com/albumcover/CTljiFJL6o0.html','战狼::http://www.youku.com/show_page/id_z117b9abc00c311e38b3f.html','战狼::http://www.iqiyi.com/lib/m_205375814.html','战狼::http://v.qq.com/detail/1/1bnyfttijufe0cq.html','咱们结婚吧::http://movie.douban.com/subject/26140241','咱们结婚吧::http://www.tudou.com/albumcover/0j4LaPD0WOU.html','咱们结婚吧::http://www.youku.com/show_page/id_zba7c5304722311e4abda.html','咱们结婚吧::http://www.iqiyi.com/lib/m_205525114.html','咱们结婚吧::http://v.qq.com/detail/m/mucm123v4cal6h2.html','公路美人::http://movie.douban.com/subject/26337830','公路美人::http://www.tudou.com/albumcover/RTzZHTH9-no.html','公路美人::http://www.youku.com/show_page/id_z7c20d56ccad411e4b8e3.html','公路美人::http://www.iqiyi.com/lib/m_206601014.html','公路美人::http://v.qq.com/detail/h/he1nkpelg02bakt.html','冲锋车::http://movie.douban.com/subject/25811357','冲锋车::http://www.tudou.com/albumcover/Y_zKPifqNAE.html','冲锋车::http://www.youku.com/show_page/id_z34257ef47cdb11e3a705.html','冲锋车::http://www.iqiyi.com/lib/m_206633214.html','冲锋车::http://v.qq.com/detail/w/wq0bmergm8u7yuf.html','绝命逃亡::http://movie.douban.com/subject/20253940','绝命逃亡::http://www.tudou.com/albumcover/i2OrKBMJ1ME.html','绝命逃亡::http://www.youku.com/show_page/id_z7c165b4c620b11e3a705.html','绝命逃亡::http://www.iqiyi.com/lib/m_205100814.html','绝命逃亡::http://v.qq.com/detail/u/uvpkqyqiv4r3hm5.html','无敌小飞猪::http://movie.douban.com/subject/25769893','无敌小飞猪::http://www.tudou.com/albumcover/bkDdDSUL6mQ.html','无敌小飞猪::http://www.youku.com/show_page/id_z86a768cac3ae11e49e2a.html','无敌小飞猪::http://www.iqiyi.com/lib/m_206573414.html','无敌小飞猪::http://v.qq.com/detail/z/z6gitk7d5w1jshw.html','暴疯语::http://movie.douban.com/subject/25742299','暴疯语::http://www.tudou.com/albumcover/z8WDBKBYa14.html','暴疯语::http://www.youku.com/show_page/id_z0f450efe80ed11e38b3f.html','暴疯语::http://www.iqiyi.com/lib/m_205360414.html','暴疯语::http://v.qq.com/detail/i/inmebpjai273d5x.html','三更车库::http://movie.douban.com/subject/20513060','三更车库::http://www.tudou.com/albumcover/LBslyF6pHko.html','三更车库::http://www.youku.com/show_page/id_zb1ad6dbaf35511e2b8b7.html','三更车库::http://www.iqiyi.com/lib/m_205341914.html','三更车库::http://v.qq.com/detail/k/k6flg5xjqihmh25.html','魔法总动员::http://movie.douban.com/subject/25802211','魔法总动员::http://www.iqiyi.com/lib/m_206733214.html','魔法总动员::http://v.qq.com/detail/z/zki8qxwa9tucnw2.html','全力扣杀::http://movie.douban.com/subject/25824853','全力扣杀::http://www.tudou.com/albumcover/wVSgs9oU3pc.html','全力扣杀::http://www.youku.com/show_page/id_z9e9f3480c39f11e4b2ad.html','全力扣杀::http://v.qq.com/detail/7/73oi7pwhl61seeh.html','速度与激情7::http://movie.douban.com/subject/23761370','速度与激情7::http://www.tudou.com/albumcover/1qGtdZk53EA.html','速度与激情7::http://www.youku.com/show_page/id_z12f2f6b041cd11e38b3f.html','速度与激情7::http://www.iqiyi.com/lib/m_206518414.html','速度与激情7::http://v.qq.com/detail/d/dv71ekj7urmxkvp.html','我是女王::http://movie.douban.com/subject/25780584','我是女王::http://www.tudou.com/albumcover/fZ4mIdSeMjM.html','我是女王::http://www.youku.com/show_page/id_zfd7e6fa0f52011e3b8b7.html','我是女王::http://www.iqiyi.com/lib/m_205343614.html','我是女王::http://v.qq.com/detail/k/kdi2l1ndhuh1ktp.html','陌路惊笑::http://movie.douban.com/subject/26325489','陌路惊笑::http://www.iqiyi.com/lib/m_206600314.html','陌路惊笑::http://v.qq.com/detail/7/7ovd0nk8eexn51w.html','十万火急::http://movie.douban.com/subject/26312979','十万火急::http://v.qq.com/detail/p/p2b6yuw9m4y4zph.html','贵族大盗::http://movie.douban.com/subject/24872023','贵族大盗::http://www.tudou.com/albumcover/zeDYf34TGms.html','贵族大盗::http://www.youku.com/show_page/id_za234e54e782911e3b8b7.html','贵族大盗::http://www.iqiyi.com/lib/m_205512314.html','贵族大盗::http://v.qq.com/detail/3/38jisxdc7xtyx3w.html','枪过境::http://movie.douban.com/subject/26306671','枪过境::http://www.iqiyi.com/lib/m_206406214.html','枪过境::http://v.qq.com/detail/n/ng1bi3rtppb7ood.html','万物生长::http://movie.douban.com/subject/25872931','万物生长::http://www.tudou.com/albumcover/r-aMF-6osQs.html','万物生长::http://www.youku.com/show_page/id_z475341407a8d11e4abda.html','万物生长::http://www.iqiyi.com/lib/m_206408214.html','万物生长::http://v.qq.com/detail/u/uxq7ncq80rf65k5.html','疯狂外星人::http://movie.douban.com/subject/10827341','疯狂外星人::http://www.tudou.com/albumcover/9OQxzWC-hEo.html','疯狂外星人::http://www.youku.com/show_page/id_zd88ae196921611e3b8b7.html','疯狂外星人::http://www.iqiyi.com/lib/m_206676614.html','疯狂外星人::http://v.qq.com/detail/r/rht66yu57g1gdi5.html','我是奋青::http://movie.douban.com/subject/25767590','我是奋青::http://www.tudou.com/albumcover/sgkqzCPTZ1Q.html','我是奋青::http://www.youku.com/show_page/id_zd54bb9e4ce9611e3a705.html','我是奋青::http://www.iqiyi.com/lib/m_205360514.html','我是奋青::http://v.qq.com/detail/b/b2qbswcu300sxl2.html','我的情敌是超人::http://movie.douban.com/subject/24875519','我的情敌是超人::http://www.tudou.com/albumcover/L3ZCc8Vaapw.html','我的情敌是超人::http://www.youku.com/show_page/id_zda5e3752832a11e3a705.html','我的情敌是超人::http://www.iqiyi.com/lib/m_205357714.html','我的情敌是超人::http://v.qq.com/detail/4/49or4pcyxs0rj5h.html']
+
+arr.each do |info|
+  title = info.split(/::/).first
+  url   = info.split(/::/).last
+  site  =  '豆瓣' if url.include?('douban')
+  site  =  '优酷' if url.include?('youku')
+  site  =  '土豆' if url.include?('tudou')
+  site  =  '腾讯' if url.include?('qq')
+  site  =  '爱奇艺' if url.include?('iqiyi')
+  Task.create(title:title,url:url,site:site)
+end
