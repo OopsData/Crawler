@@ -29,7 +29,7 @@ when 'production'
 	  runner "Task.runing_movie_tasks"
 	end
 
-	every 1.day :at => '15:00 pm' do 
+	every 1.day, :at => '15:00 pm' do 
 		runner "Task.runing_tieba_tasks"
 	end
 
