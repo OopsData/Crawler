@@ -66,6 +66,50 @@ class Task
   end
 
 
+  def self.runing_qqlive_tasks
+    qqlive  = MovieSpider::Qqlive.new
+    results = qqlive.start_crawl
+    results.each do |result|
+      qlive = Qqlive.where(cmt_id:result[:cmt_id]).first
+      unless qlive.present?
+        Qqlive.create(result)
+      end
+    end
+  end
+
+  def self.runing_special_keywords
+    self.where(status:ENABLE,type:'news').each do |task|
+      end_date = task.end_date
+      end_date = (Date.today - 1.days).strftime('%Y-%-m-%-d') unless task.end_date.present? 
+      baidu    = MovieSpider::Baidu.new(task.keyword,task.start_date,end_date)
+      data     = baidu.get_news
+      news_ids = []
+      data[:infos].each do |d|
+        param = {
+          keyword:task.keyword,
+          total:data[:total],
+          avg:data[:svg],
+          title:d[:title],
+          link:d[:link],
+          media:d[:media],
+          date:d[:date],
+          month:d[:month],
+          day:d[:day],
+          hour:d[:hour],
+          relay:d[:relay],
+          descript:d[:descript],
+          medias:d[:medias],
+          start_date:task.start_date,
+          end_date:task.end_date
+        }
+        adm = Administrivium.create(param)
+        news_ids << adm.id.to_s
+      end
+      generage_news_excel(news_ids,task.keyword)
+    end
+  end
+
+
   def self.runing_news_tasks
     news_ids   = []
     self.where(status:ENABLE,type:'news').each do |task|
@@ -101,13 +145,13 @@ class Task
 
   #CCTV6 新闻
   def self.runing_stars_news
-    stars  = ['左耳 电影','横冲直撞好莱坞 电影','老炮儿 电影','《报告老板》 电影','《卧虎藏龙2》','三打白骨精 电影','《美人鱼》 电影','澳门风云3 电影','叶问3 电影','《长城》 电影']
+    #stars  = ['左耳 电影','横冲直撞好莱坞 电影','老炮儿 电影','《报告老板》 电影','《卧虎藏龙2》','三打白骨精 电影','《美人鱼》 电影','澳门风云3 电影','叶问3 电影','《长城》 电影']
+    stars = ['左耳 电影','万万没想到 电影','港囧 电影','煎饼侠 电影']
     threads = []
     stars.each do |star|
       runing_stars_tasks(star)
     end
   end
-
 
 
   def self.runing_stars_tasks(file_name=nil)
@@ -119,7 +163,7 @@ class Task
     stars = ["#{file_name}"]
     hash = Hash.new()
     stars.each do |s|
-      star = MovieSpider::Star.new("#{s}",'2014-3-1','2015-3-20')
+      star = MovieSpider::Star.new("#{s}",'2014-4-1','2015-3-20')
       hash["#{s}"] =  star.get_special_site_news_list
     end
     generage_star_excel(hash,file_name)
@@ -127,58 +171,11 @@ class Task
   #CCTV6 贴吧
   def self.runing_tieba_tasks
   #TODO 这个是为4月份的颁奖晚会准备的数据,这里写成了常量,有待优化,应实现动态添加
+
     tieba_stars = [
-      # {name:"范冰冰",link:'http://tieba.baidu.com/f?kw=%E8%8C%83%E5%86%B0%E5%86%B0&ie=utf-8&tp=0',limit:20000},
-      # {name:"邓超",link:'http://tieba.baidu.com/f?kw=%E9%82%93%E8%B6%85&ie=utf-8&tp=0',limit:10000},
-      # {name:"杨颖",link:'http://tieba.baidu.com/f?kw=angelababy&ie=utf-8&tp=0',limit:8000},
-      # {name:"黄渤",link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E6%B8%A4&ie=utf-8&tp=0',limit:5000},
-      # {name:"陈柏霖", link:'http://tieba.baidu.com/f?ie=utf-8&kw=%E9%99%88%E6%9F%8F%E9%9C%96',limit:2000},
-      # {name:"陈学冬", link:'http://tieba.baidu.com/f?kw=%E9%99%88%E5%AD%A6%E5%86%AC&ie=utf-8&tp=0',limit:6000}
-      # {name:"黄轩", link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E8%BD%A9&ie=utf-8&tp=0',limit:2000}
-      # {name:"杨洋", link:'http://tieba.baidu.com/f?kw=%E6%9D%A8%E6%B4%8B&ie=utf-8&tp=0',limit:5000}
-      # {name:"王宝强", link:'http://tieba.baidu.com/f?kw=%E7%8E%8B%E5%AE%9D%E5%BC%BA&ie=utf-8&tp=0',limit:5500}
-      # {name:"周冬雨",link:'http://tieba.baidu.com/f?kw=%E5%91%A8%E5%86%AC%E9%9B%A8&ie=utf-8&tp=0',limit:12000}
-      # {name:"高圆圆", link:'http://tieba.baidu.com/f?kw=%E9%AB%98%E5%9C%86%E5%9C%86&ie=utf-8&tp=0',limit:10000},
-      # {name:"tfboys",link:'http://tieba.baidu.com/f?kw=tfboys&ie=utf-8&tp=0',limit:35100},
-      # {name:"陈赫",link:'http://tieba.baidu.com/f?kw=%E9%99%88%E8%B5%AB&ie=utf-8&tp=0',limit:30000},
-      # {name:"陈伟霆", link:'http://tieba.baidu.com/f?kw=%E9%99%88%E4%BC%9F%E9%9C%86&ie=utf-8',limit:17000},
-      # {name:"黄晓明", link:'http://tieba.baidu.com/f?kw=%E9%BB%84%E6%99%93%E6%98%8E&ie=utf-8&tp=0',limit:9000}
-      # {name:"陈晓",   link:'http://tieba.baidu.com/f?kw=%E9%99%88%E6%99%93&ie=utf-8&tp=0',limit:10000},
-      # {name:"冯绍峰", link:'http://tieba.baidu.com/f?kw=%E5%86%AF%E7%BB%8D%E5%B3%B0&ie=utf-8&tp=0',limit:30000},
-      # {name:"袁泉", link:'http://tieba.baidu.com/f?kw=%E8%A2%81%E6%B3%89&ie=utf-8&tp=0',limit:1000},
-      # {name:"赵又廷", link:'http://tieba.baidu.com/f?kw=%E8%B5%B5%E5%8F%88%E5%BB%B7&ie=utf-8&tp=0',limit:1500},
-      # {name:"李晨", link:'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%99%A8&ie=utf-8&tp=0',limit:5000},
-      # {name:"周迅", link:'http://tieba.baidu.com/f?kw=%E5%91%A8%E8%BF%85&ie=utf-8&tp=0',limit:5000}, 
-      # {name:"郑恺", link:'http://tieba.baidu.com/f?kw=%E9%83%91%E6%81%BA&ie=utf-8&tp=0',limit:8000},
-      # {name:"赵薇", link:'http://tieba.baidu.com/f?kw=%E8%B5%B5%E8%96%87&ie=utf-8&tp=0',limit:22000},
-      # {name:"钟汉良",link:'http://tieba.baidu.com/f?kw=%E9%92%9F%E6%B1%89%E8%89%AF&ie=utf-8&tp=0',limit:26000},
-      # {name:"杨幂", link:'http://tieba.baidu.com/f?kw=%E6%9D%A8%E5%B9%82&ie=utf-8&tp=0',limit:30000},
-      # {name:"林更新", link:'http://tieba.baidu.com/f?kw=%E6%9E%97%E6%9B%B4%E6%96%B0&ie=utf-8&tp=0',limit:2000},
-      # {name:"倪妮", link:'http://tieba.baidu.com/f?kw=%E5%80%AA%E5%A6%AE&ie=utf-8&tp=0',limit:2000},
-      # {name:"欧豪", link:'http://tieba.baidu.com/f?kw=%E6%AC%A7%E8%B1%AA&ie=utf-8&tp=0',limit:12000},
-      # {name:"刘诗诗", link:'http://tieba.baidu.com/f?kw=%E5%88%98%E8%AF%97%E8%AF%97&ie=utf-8&tp=0',limit:13000}
-      # {name:"鹿晗", link:'http://tieba.baidu.com/f?kw=%E9%B9%BF%E6%99%97&ie=utf-8&tp=0',limit:29000}     
-      # {name:"谢依霖", link:'http://tieba.baidu.com/f?kw=%E8%B0%A2%E4%BE%9D%E9%9C%96&ie=utf-8',limit:1000},
-      # {name:"汤唯", link:'http://tieba.baidu.com/f?kw=%E6%B1%A4%E5%94%AF&ie=utf-8&tp=0' ,limit:5000},
-      # {name:"彭于晏", link:'http://tieba.baidu.com/f?kw=%E5%BD%AD%E4%BA%8E%E6%99%8F&ie=utf-8&tp=0',limit:8000},
-      # {name:"佟丽娅", link:'http://tieba.baidu.com/f?kw=%E4%BD%9F%E4%B8%BD%E5%A8%85&ie=utf-8&tp=0',limit:9000},        
-      # {name:"吴亦凡", link:'http://tieba.baidu.com/f?kw=%E5%90%B4%E4%BA%A6%E5%87%A1&ie=utf-8&tp=0',limit:20000},
-      # {name:"刘亦菲", link:'http://tieba.baidu.com/f?kw=%E5%88%98%E4%BA%A6%E8%8F%B2&ie=utf-8&tp=0',limit:37000},
-      # {name:"李易峰",link:'http://tieba.baidu.com/f?kw=%E6%9D%8E%E6%98%93%E5%B3%B0&ie=utf-8&tp=0',limit:54000}
-      # 以上数据表示已经跑完--------------------------------------------------------------------------------------    
-      # {name:"井柏然", link:'http://tieba.baidu.com/f?kw=%E4%BA%95%E6%9F%8F%E7%84%B6&ie=utf-8&tp=0',limit:5000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:99000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:10000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:20000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:30000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:40000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:50000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:60000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:70000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:80000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:90000}
-      # {name:"韩寒", link:'http://tieba.baidu.com/f?kw=%E9%9F%A9%E5%AF%92&ie=utf-8&tp=0',limit:100000}
-      
+      {name:"我们15个",link:'http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8',limit:0},
+      {name:"奇葩说",link:'http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8',limit:0},
+      {name:"真正男子汉",link:'http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8',limit:0}
     ]
 
     threads = []
@@ -213,10 +210,10 @@ class Task
     threads.each { |thr| thr.join }
   end
 
-  def self.generage_news_excel(news_ids)
+  def self.generage_news_excel(news_ids,keyword=nil)
     book   = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet :name => '新闻数据'
-    sheet1.row(0).concat %w(电影  标题  链接  发表媒体  发表日期  月  天  小时  转载数量  平均转载量  总提及量 起始时间  结束时间  内容  转载媒体)
+    sheet1.row(0).concat %w(关键词  标题  链接  发表媒体  发表日期  月  天  小时  转载数量  平均转载量  总提及量 起始时间  结束时间  内容  转载媒体)
     row_count = 0
     news_ids.each do |nid|
       news = Administrivium.find(nid)
@@ -226,7 +223,12 @@ class Task
         row_count += 1
       end
     end
-    book.write Rails.root.to_s + '/public/export/' + "#{(Date.today - 1.days).strftime('%F')}" + "_news.xls" 
+    if keyword.present?
+      book.write Rails.root.to_s + '/public/export/' + "#{keyword}" + "_news.xls" 
+    else
+      book.write Rails.root.to_s + '/public/export/' + "#{(Date.today - 1.days).strftime('%F')}" + "_news.xls" 
+    end
+    
   end
 
   def self.generage_movie_excel(movies)

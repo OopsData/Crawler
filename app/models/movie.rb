@@ -16,17 +16,25 @@ class Movie
   def runing_tudou_tasks
     Task.where(status:Task::ENABLE,site:'土豆',title:self.title).each do |task|
       tudou = MovieSpider::Tudou.new(task.url)
-      data  = tudou.get_page_info
-      self.play_info[:tudou] = data
-      self.save
+      data  = tudou.start_crawl
+      if data.is_a?(Array)
+        self.play_info[:tudou] =  data
+      elsif data.is_a?(Hash)
+        self.play_info[:tudou] << data
+      end
+      self.save  
     end
   end
 
   def runing_youku_tasks
     Task.where(status:Task::ENABLE,site:'优酷',title:self.title).each do |task|
       youku = MovieSpider::Youku.new(task.url)
-      data  = youku.get_page_info
-      self.play_info[:youku] = data
+      data  = youku.start_crawl
+      if data.is_a?(Array)
+        self.play_info[:youku] =  data
+      elsif data.is_a?(Hash)
+        self.play_info[:youku] << data
+      end
       self.save      
     end
   end
@@ -34,18 +42,26 @@ class Movie
   def runing_tecent_tasks
     Task.where(status:Task::ENABLE,site:'腾讯',title:self.title).each do |task|
       qq    = MovieSpider::Qq.new(task.url)
-      data  = qq.get_page_info
-      self.play_info[:tecent] = data
-      self.save
+      data  = qq.start_crawl
+      if data.is_a?(Array)
+        self.play_info[:tecent] =  data
+      elsif data.is_a?(Hash)
+        self.play_info[:tecent] << data
+      end
+      self.save 
     end
   end
 
   def runing_iqiyi_tasks
     Task.where(status:Task::ENABLE,site:'爱奇艺',title:self.title).each do |task|
       iqiyi = MovieSpider::Iqiyi.new(task.url)
-      data  = iqiyi.get_page_info
-      self.play_info[:iqiyi] = data
-      self.save      
+      data  = iqiyi.start_crawl
+      if data.is_a?(Array)
+        self.play_info[:iqiyi] =  data
+      elsif data.is_a?(Hash)
+        self.play_info[:iqiyi] << data
+      end
+      self.save    
     end
   end
 
