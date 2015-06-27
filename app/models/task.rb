@@ -65,16 +65,24 @@ class Task
     generage_movie_excel(movies)
   end
 
+  def self.runing_fantuan_tasks
+    fantuan  = MovieSpider::Fantuan.new
+    results  = fantuan.start_crawl
+    results.each do |result|
+      Fantuan.create(result)
+    end
+    generate_fantuan_excel(results)
+  end
 
   def self.runing_qqlive_tasks
     qqlive  = MovieSpider::Qqlive.new
     results = qqlive.start_crawl
-    results.each do |result|
-      qlive = Qqlive.where(cmt_id:result[:cmt_id]).first
-      unless qlive.present?
-        Qqlive.create(result)
-      end
-    end
+    # results.each do |result|
+    #   qlive = Qqlive.where(cmt_id:result[:cmt_id]).first
+    #   unless qlive.present?
+    #     Qqlive.create(result)
+    #   end
+    # end
   end
 
   def self.runing_special_keywords
@@ -317,6 +325,20 @@ class Task
     book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
   end
 
+
+  def self.generate_fantuan_excel(results)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '饭团数据'
+    sheet1.row(0).concat %w(标题 发帖时间  作者 点赞量 评论量  内容)
+    row_count = 0
+    results.each do |result|
+      rw = [result['title'],result['time'],result['author'],result['up'],result['orireplynum'],result['content']]
+      sheet1.row(row_count + 1).replace(rw)
+      row_count += 1
+    end
+    book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today - 1.days).strftime('%F')}.xls"
+
+  end
 
 
 end
