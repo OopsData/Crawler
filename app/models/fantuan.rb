@@ -2,6 +2,7 @@ require 'movie_spider'
 class Fantuan
   include Mongoid::Document
   include Mongoid::Timestamps
+  field :postid,type:String
   field :title,type:String
   field :content,type:String
   field :orireplynum,type:Integer

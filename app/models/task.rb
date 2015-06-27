@@ -322,7 +322,8 @@ class Task
       end
     end
     tiebaids = [] #释放内存
-    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
+    # book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today).strftime('%F')}_" + "#{star}.xls"
   end
 
 
@@ -336,7 +337,7 @@ class Task
       sheet1.row(row_count + 1).replace(rw)
       row_count += 1
     end
-    book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today - 1.days).strftime('%F')}.xls"
+    book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today).strftime('%F')}.xls"
 
   end
 
