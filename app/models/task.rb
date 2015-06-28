@@ -355,7 +355,7 @@ class Task
       row_count = 0
       sheet1.row(0).concat %w( 发帖时间 作者  评论量 内容)
       datas.each do |qqlive|
-        rw = [qqlive.time.strftime('%Y-%m-d% %H:%I:%S'),qqlive.nick,qqlive.up,qqlive.cont]
+        rw = [qqlive.time.strftime('%Y-%m-%d %H:%I:%S'),qqlive.nick,qqlive.up,qqlive.cont]
         sheet1.row(row_count + 1).replace(rw)
         row_count += 1
       end
