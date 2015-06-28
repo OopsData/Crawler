@@ -345,7 +345,7 @@ class Task
     td  = Date.today.strftime('%F')
     datas = Qqlive.all.select{|e| e.time.strftime('%F') == Time.now.strftime('%F') }
     tmp_datas = []
-    datas.each_slice(200) do |qqlives|
+    datas.each_slice(50000) do |qqlives|
       tmp_datas << qqlives
     end
 
