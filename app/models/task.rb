@@ -343,7 +343,7 @@ class Task
 
   def self.generate_qqlive_excel
     td  = Date.today.strftime('%F')
-    datas = Qqlive.all.select{|e| e.time.strftime('%F') == Time.now.strftime('%F') }
+    datas = Qqlive.desc(:time).select{|e| e.time.strftime('%F') == Time.now.strftime('%F') }
     tmp_datas = []
     datas.each_slice(50000) do |qqlives|
       tmp_datas << qqlives
