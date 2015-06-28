@@ -77,12 +77,12 @@ class Task
   def self.runing_qqlive_tasks
     qqlive  = MovieSpider::Qqlive.new
     results = qqlive.start_crawl
-    # results.each do |result|
-    #   qlive = Qqlive.where(cmt_id:result[:cmt_id]).first
-    #   unless qlive.present?
-    #     Qqlive.create(result)
-    #   end
-    # end
+    results.each do |result|
+      qlive = Qqlive.where(cmt_id:result[:cmt_id]).first
+      unless qlive.present?
+        Qqlive.create(result)
+      end
+    end
   end
 
   def self.runing_special_keywords

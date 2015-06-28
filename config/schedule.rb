@@ -37,7 +37,7 @@ when 'production'
 		runner "Task.runing_fantuan_tasks"
 	end
 
-	every 5.minutes do 
+	every 2.minutes do 
 		runner "Task.runing_qqlive_tasks"
 	end
 
