@@ -341,5 +341,26 @@ class Task
 
   end
 
+  def self.generate_qqlive_excel
+    datas = Qqlive.all.map{|e| e.time.strftime('%F') == Time.now.strftime('%F') }
+    tmp_datas = []
+    datas.each_slice(200) do |qqlives|
+      tmp_datas << qqlives
+    end
+
+    tmp_datas.each_with_index do | datas,idx|
+      book   = Spreadsheet::Workbook.new
+      sheet1 = book.create_worksheet :name => '弹幕数据'
+      row_count = 0
+      sheet1.row(0).concat %w( 发帖时间 作者  评论量 内容)
+      datas.each do |qqlive|
+        rw = [qqlive.time.strftime('%Y-%m-d %H:%I:%S'),qqlive.nick,qqlive.up,qqlive.cont]
+        sheet1.row(row_count + 1).replace(rw)
+        ow_count += 1
+      end
+      book.write Rails.root.to_s + '/public/export/' + "弹幕_#{(Date.today).strftime('%F')}_#{idx + 1}.xls"
+    end
+  end
+
 
 end
