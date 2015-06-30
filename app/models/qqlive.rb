@@ -12,5 +12,5 @@ class Qqlive
   field :nick,type: String
   field :gender,type: Integer
   field :region,type:String
-  index({ time: 1 }, { background: true } )
+  index({ time: -1 }, { background: true } )
 end
