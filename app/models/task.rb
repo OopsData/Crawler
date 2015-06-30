@@ -10,6 +10,27 @@ class Task
   ENABLE  = 1
   DISABLE = 0
   SITE_ARR = ['tudou','youku','tecent','iqiyi']
+
+
+  KWS = {
+    "肖凡凡" => %w(肖凡凡 云南妹 黑妹 洗头妹 骚浪贱 学生妹),
+    "刘洛汐" => %w(刘落夕 心机婊 心机妹 汐哥 平胸妹 心机表),
+    "刘希"   => %w(刘希 刘西 刘熙),
+    "聂江伟" => %w(聂江伟 老鬼 队长),
+    "张婷媗" => %w(张婷媗 台湾 辣妈 台妹),
+    "邓碧莹" => %w(邓碧莹 短发女 广东妹),
+    "孙铭"   => %w(孙铭 兵哥),
+    "郭道辉" => %w(郭道辉 农民工),
+    "刘志轩" => %w(刘志轩 蘑菇头 锅盖头 黑衣男 小四眼 小黑哥),
+    "易秋"  => %w(易秋 道士),
+    "宋鸽"  => %w(宋鸽 鸽子 博士 哈佛女),
+    "丘子建" => %w(丘子建 渣男),
+    "谭丽敏" => %w(谭丽敏 老太太 老太婆 上海阿姨 老奶奶),
+    "郑虎"  => %w(郑虎 胖子 胖胖),
+    "刘富华" => %w(刘富华 鲁迅)
+  }
+
+
   field :title, type: String
   field :url, type: String
   field :site, type: String
@@ -342,19 +363,56 @@ class Task
   end
 
 
+  # def self.generate_fantuan_excel(results)
+  #   book   = Spreadsheet::Workbook.new
+  #   sheet1 = book.create_worksheet :name => '饭团数据'
+  #   sheet1.row(0).concat %w(标题 发帖时间  作者 点赞量 评论量  内容)
+  #   row_count = 0
+  #   results.each do |result|
+  #     rw = [result['title'],result['time'],result['author'],result['up'],result['orireplynum'],result['content']]
+  #     sheet1.row(row_count + 1).replace(rw)
+  #     row_count += 1
+  #   end
+  #   book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today).strftime('%F')}.xls"
+  # end
+
+
   def self.generate_fantuan_excel(results)
-    book   = Spreadsheet::Workbook.new
-    sheet1 = book.create_worksheet :name => '饭团数据'
-    sheet1.row(0).concat %w(标题 发帖时间  作者 点赞量 评论量  内容)
+    book      = Spreadsheet::Workbook.new
+    sheet1    = book.create_worksheet :name => '饭团数据'
     row_count = 0
-    results.each do |result|
-      rw = [result['title'],result['time'],result['author'],result['up'],result['orireplynum'],result['content']]
+    sheet1.row(0).concat %w(姓名  关键词 帖子量 帖子回复量 平均回复量)
+
+    KWS.each do |name,arr|
+      count = 0
+      reply = 0
+      results.each do |data|
+        #data 代表某一个帖子
+        arr.each do |kwd|
+          if data['content'].match(/#{kwd}/)
+            count += 1
+            reply += data['orireplynum'].to_i
+          end
+        end
+      end
+      rw = [name,arr.join(';'),count,reply,reply.to_f / count]
       sheet1.row(row_count + 1).replace(rw)
       row_count += 1
     end
-    book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today).strftime('%F')}.xls"
 
+    book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today).strftime('%F')}.xls"
+    
+
+
+
+    # results.each do |result|
+    #   rw = [result['title'],result['time'],result['author'],result['up'],result['orireplynum'],result['content']]
+    #   sheet1.row(row_count + 1).replace(rw)
+    #   row_count += 1
+    # end
+    # book.write Rails.root.to_s + '/public/export/' + "饭团_#{(Date.today).strftime('%F')}.xls"
   end
+
 
   # def self.generate_qqlive_excel(td=nil)
   #   td  = td || Date.today.strftime('%F')
@@ -384,27 +442,9 @@ class Task
     row_count = 0   
     sheet1.row(0).concat %w(姓名  关键词  频次)
 
-    kws = {
-      "肖凡凡" => %w(肖凡凡 云南妹 黑妹 洗头妹 骚浪贱 学生妹),
-      "刘洛汐" => %w(刘落夕 心机婊 心机妹 汐哥 平胸妹 心机表),
-      "刘希"   => %w(刘希 刘西 刘熙),
-      "聂江伟" => %w(聂江伟 老鬼 队长),
-      "张婷媗" => %w(张婷媗 台湾 辣妈 台妹),
-      "邓碧莹" => %w(邓碧莹 短发女 广东妹),
-      "孙铭"   => %w(孙铭 兵哥),
-      "郭道辉" => %w(郭道辉 农民工),
-      "刘志轩" => %w(刘志轩 蘑菇头 锅盖头 黑衣男 小四眼 小黑哥),
-      "易秋"  => %w(易秋 道士),
-      "宋鸽"  => %w(宋鸽 鸽子 博士 哈佛女),
-      "丘子建" => %w(丘子建 渣男),
-      "谭丽敏" => %w(谭丽敏 老太太 老太婆 上海阿姨 老奶奶),
-      "郑虎"  => %w(郑虎 胖子 胖胖),
-      "刘富华" => %w(刘富华 鲁迅)
-    }
-
     datas = Qqlive.all.select{|e| e.time.strftime('%F') == td }
 
-    kws.each do |name,arr|
+    KWS.each do |name,arr|
       count = 0;
       datas.each do |data|
         arr.each do |kwd|
