@@ -176,6 +176,21 @@ class Task
     end
     generage_star_excel(hash,file_name)
   end
+
+  def self.runing_tieba_special_post
+    tieba      = MovieSpider::Tieba.new(nil,Rails.root.to_s + '/cookies.txt',0)
+    results    = tieba.special_crawl
+    book       = Spreadsheet::Workbook.new
+    sheet1     = book.create_worksheet :name => '贴吧特殊帖'
+    row_count  = 0
+    sheet1.row(0).concat %w(作者 作者级别  回复时间  评论数 内容 )
+    results[:comment_info].each do |res|
+      rw = [res[:author],res[:level],res[:time],res[:rep],res[:cont]]
+      sheet1.row(row_count + 1).replace(rw)
+      row_count += 1
+    end
+    book.write Rails.root.to_s + '/public/export/贴吧特殊帖.xls'
+  end
   #CCTV6 贴吧
   def self.runing_tieba_tasks
   #TODO 这个是为4月份的颁奖晚会准备的数据,这里写成了常量,有待优化,应实现动态添加
