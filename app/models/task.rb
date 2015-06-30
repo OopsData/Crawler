@@ -242,7 +242,7 @@ class Task
         tiebas  = []
         results.each do |result|
           Rails.logger.info("&&&&&&&&&&&& #{name}  循环入库中 &&&&&&&&&&&&&&&&")
-          info  = {star:name,created:result[:created],date:result[:created].scan(/\d+-\d+-\d+/).first,author:result[:author],title:result[:title],content:result[:content],comment:result[:comment]}
+          info  = {star:name,created:result[:created],date:result[:created].scan(/\d+-\d+-\d+/).first,author:result[:author],title:result[:title],content:result[:content]}
           tieba = TiebaInfo.where(info).first
           info.merge!({reply:result[:comment].to_i,focus:focus.to_i})
           if tieba.present?
@@ -388,7 +388,7 @@ class Task
         arr.each do |kwd|
           if (tieba_info.content.match(/#{kwd}/) || tieba_info.title.match(/#{kwd}/))
             count += 1
-            reply += tieba_info.comment.to_i
+            reply += tieba_info.reply.to_i
           end
         end
       end
