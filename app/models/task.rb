@@ -213,14 +213,20 @@ class Task
     book.write Rails.root.to_s + '/public/export/贴吧特殊帖.xls'
   end
   #CCTV6 贴吧
-  def self.runing_tieba_tasks
+  def self.runing_tieba_tasks(is_qqlive=false,limit=0)
   #TODO 这个是为4月份的颁奖晚会准备的数据,这里写成了常量,有待优化,应实现动态添加
-
+    if is_qqlive
+      tieba_stars = [
+        {name:"我们15个",link:'http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8',limit:limit}
+      ]       
+    else
     tieba_stars = [
-      {name:"我们15个",link:'http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8',limit:0},
-      {name:"奇葩说",link:'http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8',limit:0},
-      {name:"真正男子汉",link:'http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8',limit:0}
-    ]
+      {name:"我们15个",link:'http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8',limit:limit},
+      {name:"奇葩说",link:'http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8',limit:limit},
+      {name:"真正男子汉",link:'http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8',limit:limit}
+    ]      
+    end
+
 
     threads = []
 
@@ -236,7 +242,7 @@ class Task
         tiebas  = []
         results.each do |result|
           Rails.logger.info("&&&&&&&&&&&& #{name}  循环入库中 &&&&&&&&&&&&&&&&")
-          info  = {star:name,created:result[:created],date:result[:created].scan(/\d+-\d+-\d+/).first,author:result[:author],title:result[:title]}
+          info  = {star:name,created:result[:created],date:result[:created].scan(/\d+-\d+-\d+/).first,author:result[:author],title:result[:title],content:result[:content],comment:result[:comment]}
           tieba = TiebaInfo.where(info).first
           info.merge!({reply:result[:comment].to_i,focus:focus.to_i})
           if tieba.present?
@@ -247,7 +253,12 @@ class Task
             tiebas << tieba.id.to_s
         end
         results = [] #释放内存
-        generate_tieba_excel(name,tiebas)
+        if is_qqlive
+          generate_tieba_fiveteen_excel(tiebas)
+        else
+          generate_tieba_excel(name,tiebas)
+        end
+        
         Rails.logger.info " *************** #{name} info generated ***************"
       }   
     end
@@ -361,6 +372,35 @@ class Task
     # book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today - 1.days).strftime('%F')}_" + "#{star}.xls"
     book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today).strftime('%F')}_" + "#{star}.xls"
   end
+
+
+  def self.generate_tieba_fiveteen_excel(tiebaids)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '贴吧数据' 
+    sheet1.row(0).concat %w(姓名 关键词  帖子量  帖子回复量 帖子平均回复量)
+    row_count = 0
+
+    KWS.each do |name,arr|
+      count = 0
+      reply = 0
+      tiebaids.each do |tiebaid|
+        tieba_info  = TiebaInfo.find(tiebaid)
+        arr.each do |kwd|
+          if (tieba_info.content.match(/#{kwd}/) || tieba_info.title.match(/#{kwd}/))
+            count += 1
+            reply += tieba_info.comment.to_i
+          end
+        end
+      end
+      rw = [name,arr.join(';'),count,reply,reply.to_f / count]
+      sheet1.row(row_count + 1).replace(rw)
+      row_count += 1
+    end
+
+    tiebaids = [] #释放内存
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{(Date.today).strftime('%F')}_15个.xls"
+  end
+
 
 
   # def self.generate_fantuan_excel(results)
