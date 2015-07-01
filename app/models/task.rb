@@ -531,24 +531,47 @@ class Task
     KWS.each do |name,arr|
       tiebas.each do |tieba_info|
         arr.each do |kwd|
-          if (tieba_info.content.to_s.match(/#{kwd}/) || tieba_info.title.to_s.match(/#{kwd}/))
-            puts "kwd:#{kwd}"
-            puts "tieba_id:#{tieba_info.id.to_s}"
-            puts "title:#{tieba_info.title}"
-            puts "content:#{tieba_info.content}"
-            puts '=============================================='
-            if tieba_info.content.to_s.length < 1
-              rw = [kwd,tieba_info.title.to_s]
-            else
-              rw = [kwd,tieba_info.content.to_s]
-            end
+          if tieba_info.content.to_s.match(/#{kwd}/)
+            rw = [kwd,tieba_info.content.to_s]
+            sheet1.row(row_count + 1).replace(rw)
+            row_count += 1
+          elsif tieba_info.title.to_s.match(/#{kwd}/)
+            rw = [kwd,tieba_info.title.to_s]
             sheet1.row(row_count + 1).replace(rw)
             row_count += 1
           end
         end
       end
     end
-    book.write Rails.root.to_s + '/public/export/' + "贴吧_云词_#{(Date.today).strftime('%F')}_15个.xls"
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_云词_#{td}_15个.xls"
+  end
+
+  def self.export_qqlive_cloud_words(td=nil)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '饭团云词数据' 
+    sheet1.row(0).concat %w(关键词 云词文本)
+    row_count = 0    
+
+    datas = Fantuan.all.select{|e| e.time.strftime('%F') == td}
+    
+    KWS.each do |name,arr|
+      datas.each do |fantuan|
+        arr.each do |kwd|
+          if fantuan.content.to_s.match(/#{kwd}/)
+            rw = [kwd,fantuan.content.to_s]
+            sheet1.row(row_count + 1).replace(rw)
+            row_count += 1
+          elsif fantuan.title.to_s.match(/#{kwd}/)
+            rw = [kwd,fantuan.title.to_s]
+            sheet1.row(row_count + 1).replace(rw)
+            row_count += 1
+          end
+        end
+      end
+    end
+    book.write Rails.root.to_s + '/public/export/' + "饭团_云词_#{td}.xls"
+
+
   end
 
 
