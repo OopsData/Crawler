@@ -485,7 +485,7 @@ class Task
     datas = Qqlive.all.select{|e| e.time.strftime('%F') == td }
 
     KWS.each do |name,arr|
-      count = 0;
+      count = 0
       datas.each do |data|
         arr.each do |kwd|
           if data.cont.match(/#{kwd}/)
@@ -507,7 +507,6 @@ class Task
     sheet1.row(0).concat %w(云词文本)
     datas = Qqlive.all.select{|e| e.time.strftime('%F') == td }
     KWS.each do |name,arr|
-      count = 0;
       datas.each do |data|
         arr.each do |kwd|
           if data.cont.match(/#{kwd}/)
@@ -519,6 +518,30 @@ class Task
       end
     end 
     book.write Rails.root.to_s + '/public/export/' + "弹幕_云词_#{td}.xls"   
+  end
+
+  def self.export_tieba_fifteen_cloud_words(td=nil)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '贴吧云词数据' 
+    sheet1.row(0).concat %w(云词文本)
+    row_count = 0
+    tiebas = TiebaInfo.all.select{|e| e.created.split(' ').first == td}
+    KWS.each do |name,arr|
+      tiebas.each do |tieba_info|
+        arr.each do |kwd|
+          if (tieba_info.content.match(/#{kwd}/) || tieba_info.title.match(/#{kwd}/))
+            if tieba_info.content.length < 1
+              rw = [tieba_info.title]
+            else
+              rw = [tieba_info.content]
+            end
+            sheet1.row(row_count + 1).replace(rw)
+            row_count += 1
+          end
+        end
+      end
+    end
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_云词_#{(Date.today).strftime('%F')}_15个.xls"
   end
 
 
