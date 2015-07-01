@@ -243,6 +243,8 @@ class Task
         results.each do |result|
           Rails.logger.info("&&&&&&&&&&&& #{name}  循环入库中 &&&&&&&&&&&&&&&&")
           info  = {star:name,created:result[:created],date:result[:created].scan(/\d+-\d+-\d+/).first,author:result[:author],title:result[:title],content:result[:content]}
+          puts info.inspect
+          puts '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
           tieba = TiebaInfo.where(info).first
           info.merge!({reply:result[:comment].to_i,focus:focus.to_i})
           if tieba.present?
