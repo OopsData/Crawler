@@ -503,6 +503,7 @@ class Task
   def self.export_qqlive_cloud_words(td=nil)
     book   = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet :name => '弹幕云词' 
+    row_count = 0
     sheet1.row(0).concat %w(云词文本)
     datas = Qqlive.all.select{|e| e.time.strftime('%F') == td }
     KWS.each do |name,arr|
