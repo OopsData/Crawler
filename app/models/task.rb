@@ -546,7 +546,7 @@ class Task
     book.write Rails.root.to_s + '/public/export/' + "贴吧_云词_#{td}_15个.xls"
   end
 
-  def self.export_qqlive_cloud_words(td=nil)
+  def self.export_fantuan_cloud_words(td=nil)
     book   = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet :name => '饭团云词数据' 
     sheet1.row(0).concat %w(关键词 云词文本)
