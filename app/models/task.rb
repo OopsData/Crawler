@@ -529,11 +529,11 @@ class Task
     KWS.each do |name,arr|
       tiebas.each do |tieba_info|
         arr.each do |kwd|
-          if (tieba_info.content.match(/#{kwd}/) || tieba_info.title.match(/#{kwd}/))
-            if tieba_info.content.length < 1
-              rw = [kwd,tieba_info.title]
+          if (tieba_info.content.to_s.match(/#{kwd}/) || tieba_info.title.to_s.match(/#{kwd}/))
+            if tieba_info.content.to_s.length < 1
+              rw = [kwd,tieba_info.title.to_s]
             else
-              rw = [kwd,tieba_info.content]
+              rw = [kwd,tieba_info.content.to_s]
             end
             sheet1.row(row_count + 1).replace(rw)
             row_count += 1
