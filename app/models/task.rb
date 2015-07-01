@@ -497,9 +497,27 @@ class Task
       sheet1.row(row_count + 1).replace(rw)
       row_count += 1
     end
-
     book.write Rails.root.to_s + '/public/export/' + "弹幕_#{td}.xls"
-    
+  end
+
+  def self.export_qqlive_cloud_words(td=nil)
+    book   = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet :name => '弹幕云词' 
+    sheet1.row(0).concat %w(云词文本)
+    datas = Qqlive.all.select{|e| e.time.strftime('%F') == td }
+    KWS.each do |name,arr|
+      count = 0;
+      datas.each do |data|
+        arr.each do |kwd|
+          if data.cont.match(/#{kwd}/)
+            rw = [data.cont]
+            sheet1.row(row_count + 1).replace(rw)
+            row_count += 1
+          end
+        end
+      end
+    end 
+    book.write Rails.root.to_s + '/public/export/' + "弹幕_云词_#{td}.xls"   
   end
 
 
