@@ -530,6 +530,10 @@ class Task
       tiebas.each do |tieba_info|
         arr.each do |kwd|
           if (tieba_info.content.to_s.match(/#{kwd}/) || tieba_info.title.to_s.match(/#{kwd}/))
+            puts "kwd:#{kwd}"
+            puts "title:#{tieba_info.title}"
+            puts "content:#{tieba_info.content}"
+            puts '=============================================='
             if tieba_info.content.to_s.length < 1
               rw = [kwd,tieba_info.title.to_s]
             else
