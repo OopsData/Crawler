@@ -531,6 +531,7 @@ class Task
         arr.each do |kwd|
           if (tieba_info.content.to_s.match(/#{kwd}/) || tieba_info.title.to_s.match(/#{kwd}/))
             puts "kwd:#{kwd}"
+            puts "tieba_id:#{tieba_info.id.to_s}"
             puts "title:#{tieba_info.title}"
             puts "content:#{tieba_info.content}"
             puts '=============================================='
