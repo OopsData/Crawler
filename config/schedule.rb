@@ -25,21 +25,21 @@ set :output, {
 
 case @environment
 when 'production'
-	every 3.days, :at => '17:30 pm' do 
-		runner "Task.runing_fifteen_tieba_tasks"
-	end
+	# every 3.days, :at => '17:30 pm' do 
+	# 	runner "Task.runing_fifteen_tieba_tasks"
+	# end
 
-	every 3.days, :at => '18:30 pm' do 
-		runner "Task.runing_fifteen_fantuan_tasks"
-	end
+	# every 3.days, :at => '18:30 pm' do 
+	# 	runner "Task.runing_fifteen_fantuan_tasks"
+	# end
 
-	every 2.minutes do 
-		runner "Task.runing_fifteen_qqlive_tasks"
-	end
+	# every 2.minutes do 
+	# 	runner "Task.runing_fifteen_qqlive_tasks"
+	# end
 
-	every 1.day, :at => '23:50 pm' do
-	  runner "Task.export_qqlive_datas_excel"
-	end
+	# every 1.day, :at => '23:50 pm' do
+	#   runner "Task.export_qqlive_datas_excel"
+	# end
 end
 
 
