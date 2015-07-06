@@ -13,4 +13,5 @@ class Qqlive
   field :gender,type: Integer
   field :region,type:String
   index({ time: -1 }, { background: true } )
+  index({cmt_id:1},{ background: true })
 end
