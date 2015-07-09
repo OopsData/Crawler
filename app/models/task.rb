@@ -424,32 +424,32 @@ class Task
     res       = tieba.start_crawl
     info      = {name:name,focus:res[:focus],results:res[:results]}
 
-    TiebaInfo.create(info)
+    #TiebaInfo.create(info)
     #导出原始数据excel
-    generate_tieba_original_data_excel(name)
+    generate_tieba_original_data_excel(info,name)
     #导出统计数据excel
-    generate_tieba_fifteen_statistics_data_excel(name)
+    generate_tieba_fifteen_statistics_data_excel(info,name)
     #导出原始数据的所有文本 作为云词用
-    generate_tieba_cloud_words_excel(name)
+    generate_tieba_cloud_words_excel(info,name)
   end 
 
   # 导出贴吧原始数据
   # name 要导出的贴吧名
   # td   日期 表示要导出某天抓取的数据
-  def self.generate_tieba_original_data_excel(name,td=nil)
+  def self.generate_tieba_original_data_excel(info,name,td=nil)
     if td
       td   = Date.parse(td)
     else
       td   = Date.today
     end
 
-    info   = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
+    #info   = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
     book   = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet :name => "贴吧原始数据_累计关注数#{info[:focus]}"
     sheet1.row(0).concat %w(作者  发帖日期  发帖小时数  发帖分钟数  回帖数  标题  内容  回帖作者  回帖时间  回帖内容  评论作者 评论时间  评论内容 )
     row_count = 0
 
-    info.results.each do |tid,result|
+    info[:results].each do |tid,result|
       basic = result[:basic]
       posts = result[:posts]
       d,h   = basic[:date].split(' ')
@@ -478,18 +478,18 @@ class Task
   # 导出贴吧原始文本作为云词词库
   # name 要导出的贴吧名
   # td 日期  表示要导出某天抓取的数据
-  def self.generate_tieba_cloud_words_excel(name,td=nil)
+  def self.generate_tieba_cloud_words_excel(info,name,td=nil)
     if td
       td    = Date.parse(td)
     else
       td    = Date.today
     end
-    info    = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
+    #info    = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
     book    = Spreadsheet::Workbook.new 
     sheet1  = book.create_worksheet :name => "贴吧云词文本"
     sheet1.row(0).concat %w(原始文本)
     row_count = 0  
-    info.results.each do |tid,result|
+    info[:results].each do |tid,result|
       basic = result[:basic]
       posts = result[:posts]
       title =  basic[:title].strip
@@ -530,13 +530,13 @@ class Task
   # 导出我们15个关键词数据
   # name 要导出的贴吧名
   # td 日期 表示要导出某天抓取的数据
-  def self.generate_tieba_fifteen_statistics_data_excel(name,td=nil)
+  def self.generate_tieba_fifteen_statistics_data_excel(info,name,td=nil)
     if td
       td   = Date.parse(td)
     else
       td   = Date.today
     end
-    info   = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
+    #info   = TiebaInfo.where(:name => name,:created_at.gte => td,:created_at.lt => td + 1.days).first
     book   = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet :name => "我们15个关键词数据"   
     sheet1.row(0).concat %w(姓名 关键词  主题量  回复帖子量  平均回复量  帖子评论量)
@@ -547,7 +547,7 @@ class Task
         theme_count     = 0 # 主题量
         post_count      = 0 # 回复帖子量
         comment_count   = 0 # 帖子评论量
-        info.results.each do |tid,result|
+        info[:results].each do |tid,result|
           basic         = result[:basic]
           theme_title   = basic[:title]
           theme_content = basic[:content] 
