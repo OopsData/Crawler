@@ -511,17 +511,17 @@ class Task
           sheet1.row(row_count + 1).replace(rw)
           row_count += 1
         end
-
-        if post[:comment_num].to_i > 0
-          post[:comments].each do |cmt|
-            content = cmt[:content].strip
-            if content.length > 0
-              rw = [content]
-              sheet1.row(row_count + 1).replace(rw)
-              row_count += 1
-            end
-          end
-        end
+        # 评论内容没有添加到云词文本
+        # if post[:comment_num].to_i > 0
+        #   post[:comments].each do |cmt|
+        #     content = cmt[:content].strip
+        #     if content.length > 0
+        #       rw = [content]
+        #       sheet1.row(row_count + 1).replace(rw)
+        #       row_count += 1
+        #     end
+        #   end
+        # end
       end
     end
     book.write Rails.root.to_s + '/public/export/' + "贴吧_#{name}_云词数据_#{td}.xls"
@@ -670,11 +670,12 @@ class Task
       rw = [ft.content]
       sheet1.row(row_count + 1).replace(rw)
       row_count += 1 
-      ft.comments.each do |cmt|
-        rw = [cmt[:content]]
-        sheet1.row(row_count + 1).replace(rw)
-        row_count += 1 
-      end         
+      # 评论内容没有加入到云词文本内
+      # ft.comments.each do |cmt|
+      #   rw = [cmt[:content]]
+      #   sheet1.row(row_count + 1).replace(rw)
+      #   row_count += 1 
+      # end         
     end
     book.write Rails.root.to_s + '/public/export/' + "饭团_云词数据_#{td.strftime('%F')}.xls"
   end
