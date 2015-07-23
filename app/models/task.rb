@@ -457,7 +457,7 @@ class Task
   # 贴吧日监测任务
   # max_pn 表示最大的pn值
   # pn值越大表示要抓取的帖子数越多
-  # 默认值为3000,即抓取最靠前的 3000 * 50 个帖子
+  # 默认值为3000,即抓取最靠前的 3000个帖子
   def self.runing_tieba_day_tasks(max_pn)
     runing_tieba_tasks(max_pn)
   end
