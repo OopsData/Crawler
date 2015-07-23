@@ -1,5 +1,7 @@
 require 'movie_spider'
 require 'spreadsheet'
+require 'net/http'
+require 'uri'
 Spreadsheet.client_encoding = 'UTF-8'
 class Task
   include Mongoid::Document
@@ -11,6 +13,20 @@ class Task
   DISABLE = 0
   # SITE_ARR = ['tudou','youku','tecent','iqiyi']
 
+  TIEBA_HASH = {
+    "我们15个" => {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",limit:nil},
+    "真正男子汉" => {name:"真正男子汉",link:"http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8&pn=0",limit:nil},
+    "奇葩说" => {name:"奇葩说",link:"http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8&pn=0",limit:nil},
+    "爸爸去哪2" => {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",limit:80000},
+    "爱上超模" => {name:"爱上超模",link:"http://tieba.baidu.com/f?kw=%E7%88%B1%E4%B8%8A%E8%B6%85%E6%A8%A1&ie=utf-8&pn=0",limit:nil},
+    "你正常吗" => {name:"你正常吗",link:"http://tieba.baidu.com/f?kw=%E4%BD%A0%E6%AD%A3%E5%B8%B8%E5%90%97&ie=utf-8&pn=0"},
+    "百万粉丝" => {name:"百万粉丝",link:"http://tieba.baidu.com/f?kw=%E7%99%BE%E4%B8%87%E7%B2%89%E4%B8%9D&ie=utf-8&pn=0",limit:nil},
+    "牵手爱情村" => {name:"牵手爱情村",link:"http://tieba.baidu.com/f?kw=%E7%89%B5%E6%89%8B%E7%88%B1%E6%83%85%E6%9D%91&ie=utf-8&pn=0",limit:nil}
+  }
+
+  WARN = %w(卸载 不要 离开 问题 假 没意思 无语 无聊 看不了 制止 怎么回事 糊涂 APP 删帖 声音 演戏 不真实 导播 宫心计 偏离 没看懂 慢 恶搞 剧本 受骗 违约 失望 质疑 作秀 农村 完蛋 中断 差 散漫 消极)
+
+  LOVER = %w(三观 解决 平顶 淘汰 实验 团结 适合 梦想 创造 破产 和谐 淘汰 财富 劳动 创新 直播 讨论 报名 参加 野外 生存 领导 社会 环境 经验 体验 规划 心计 利用 集体 条件 矛盾 实际 求生 任务 合作 责任 指挥 情绪 领导者 考验 经济 出镜 购买 剧本 充值 日播 撕逼 解锁 资源 钱 智慧 努力 勤劳 瓶子 剧透 会员 淘汰 卸载 不要 离开 问题 假 没意思 无语 无聊 看不了 制止 怎么回事 糊涂 APP 删帖 声音 演戏 不真实 导播 宫心计 偏离 没看懂 慢 恶搞 剧本 受骗 违约 失望 质疑 作秀 农村 合作 商业 镜头 讨厌 撕逼 能量 导播 牛 日播 360 全景 质量 导演 监控 真人秀 素人 定位 客观 理性 评价 散漫 消极 情绪 规则 失误 卖掉 建议 市场 屏蔽)
 
   KWS = {
     "肖凡凡" => %w(肖凡凡 云南妹 黑妹 洗头妹 骚浪贱 学生妹),
@@ -21,16 +37,64 @@ class Task
     "邓碧莹" => %w(邓碧莹 短发女 广东妹),
     "孙铭"   => %w(孙铭 兵哥),
     "郭道辉" => %w(郭道辉 农民工),
-    "刘志轩" => %w(刘志轩 蘑菇头 锅盖头 黑衣男 小四眼 小黑哥),
-    "易秋"  => %w(易秋 道士),
+    "刘志轩" => %w(刘志轩 蘑菇头 锅盖头 黑衣男 小四眼 小黑哥 马桶),
+    "易秋"  => %w(易秋 道士 易大师),
     "宋鸽"  => %w(宋鸽 鸽子 博士 哈佛女),
-    "丘子建" => %w(丘子建 渣男),
-    "谭丽敏" => %w(谭丽敏 老太太 老太婆 上海阿姨 老奶奶),
+    "丘子建" => %w(丘子建 渣男 拳手),
+    "谭丽敏" => %w(谭丽敏 老太太 老太婆 上海阿姨 老奶奶 老阿姨),
     "郑虎"  => %w(郑虎 胖子 胖胖),
-    "刘富华" => %w(刘富华 鲁迅),
-    "韦泽华" => %w(小伟 小宝)
+    "刘富华" => %w(刘富华 鲁迅 老刘),
+    "韦泽华" => %w(韦泽华 小宝 韦爵爷 韦哥 小韦)
   }
 
+
+  KWS1 = {
+    "张丰毅" => %w(张丰毅),
+    "郭晓冬" => %w(郭晓冬),
+    "王宝强" => %w(王宝强),
+    "袁弘" => %w(袁弘),
+    "刘昊然" => %w(刘昊然),
+    "杜海涛" => %w(杜海涛),
+    "欧豪" => %w(欧豪),
+    "王金武" => %w(王金武),
+    "姜伟" => %w(姜伟),
+    "闫钊" => %w(闫钊),
+    "徐晓东" => %w(徐晓东),
+    "王予曦" => %w(王予曦),
+    "孙文泽" => %w(孙文泽),
+    "文海地" => %w(文海地),
+    "谢添" => %w(谢添),
+    "班长" => %w(班长),
+    "指导员" => %w(指导员)    
+  }
+
+  KWS2 = {
+    "马东" => %w(马东),
+    "高晓松" => %w(高晓松),
+    "蔡康永" => %w(蔡康永),
+    "谢依霖" => %w(谢依霖),
+    "陶晶莹" => %w(陶晶莹),
+    "贾玲" => %w(贾玲),
+    "袁姗姗" => %w(袁姗姗),
+    "李湘" => %w(李湘),
+    "牟頔" => %w(牟頔),
+    "马薇薇" => %w(马薇薇),
+    "颜如晶" => %w(颜如晶),
+    "范湉湉" => %w(范湉湉),
+    "肖骁" => %w(肖骁),
+    "姜思达" => %w(姜思达),
+    "艾力" => %w(艾力),
+    "包江浩" => %w(包江浩),
+    "魏铭" => %w(魏铭),
+    "花希" => %w(花希),
+    "饼干" => %w(饼干),
+    "纪泽希" => %w(纪泽希),
+    "金宇轩" => %w(金宇轩),
+    "颜如晶" => %w(颜如晶),
+    "刘煊赫" => %w(刘煊赫),
+    "刘媛媛" => %w(刘媛媛),
+    "章扬" => %w(章扬)    
+  }
 
   field :title, type: String
   field :url, type: String
@@ -385,19 +449,82 @@ class Task
 
   # =========================
 
+  # 抓取要监测的节目的贴吧历史数据
+  def self.runing_tieba_history_data_tasks
+    runing_tieba_tasks
+  end
+
+  # 贴吧日监测任务
+  # max_pn 表示最大的pn值
+  # pn值越大表示要抓取的帖子数越多
+  # 默认值为3000,即抓取最靠前的 3000 * 50 个帖子
+  def self.runing_tieba_day_tasks(max_pn)
+    runing_tieba_tasks(max_pn)
+  end
+
+  # 贴吧抓取执行函数
+  def self.runing_tieba_tasks(max_pn=nil)
+    threads   = []
+    TIEBA_HASH.each do |name,hash|
+      threads << Thread.new {
+        link  = hash[:link]
+        limit = max_pn.present? ? max_pn : hash[:limit]
+        tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
+        res   = tieba.start_crawl
+        TiebaInfo.save_history_data(name,res)
+      }    
+    end
+    threads.each { |thr| thr.join }
+  end
+
+  # 抓取要监测的节目的饭团历史数据
+  def self.runing_fantuan_history_data_tasks
+  end
+
+  # 饭团日监测任务
+  def self.runing_fantuan_day_tasks
+  end
+
+
+
+
+
+
+  # def self.runing_day_tasks(max_pn=3000)
+  #   yestoday = (Date.today - 1.days).strftime('%F')
+  #   #饭团日监测任务
+  #   t1 = Thread.new{runing_fifteen_fantuan_tasks(yestoday,yestoday)}
+  #   t1.join
+  #   t2 = Thread.new{runing_tieba_tasks(max_pn)}
+  #   t2.join
+  # end
+
+  def self.get_value(word)
+    params = {poc:'s',texts:word}
+    uri = URI.parse('http://staging.wenjuanba.com:4567/api/sent')
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request.set_form_data(params)
+    response = http.request(request)
+    body = JSON.parse(response.body)
+    return body['texts'][0][1]
+  end
+
+
+
   # 《我们十五个》饭团爬虫任务
-  def self.runing_fifteen_fantuan_tasks
+  def self.runing_fifteen_fantuan_tasks(from,to)
     fantuan  = MovieSpider::Fantuan.new
     results  = fantuan.start_crawl
-    results.each do |result|
-      Fantuan.create(result)
-    end
+    # results.each do |result|
+    #   Fantuan.create(result)
+    # end
     # 导出原始数据excel
-    generate_fantuan_original_data_excel
+    generate_fantuan_original_data_excel(results,from,to)
     #导出统计数据excel
-    generate_fantuan_fifteen_statistics_data_excel
+    #generate_fantuan_fifteen_statistics_data_excel
     #导出云词数据excel
-    generate_fantuan_cloud_words_excel
+    #generate_fantuan_cloud_words_excel
   end
 
   #《我们十五个》腾讯视频直播弹幕任务
@@ -414,24 +541,49 @@ class Task
     end
   end
 
-  #《我们十五个》贴吧爬取任务
-  def self.runing_fifteen_tieba_tasks(limit=1500)
-    link_info = {name:"我们15个",link:'http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8',limit:limit}
-    name      = link_info[:name]
-    link      = link_info[:link]
-    limit     = link_info[:limit]
-    tieba     = MovieSpider::Tieba.new(link,Rails.root.to_s + '/cookies.txt',limit)
-    res       = tieba.start_crawl
-    info      = {name:name,focus:res[:focus],results:res[:results]}
 
-    #TiebaInfo.create(info)
-    #导出原始数据excel
-    generate_tieba_original_data_excel(info,name)
-    #导出统计数据excel
-    generate_tieba_fifteen_statistics_data_excel(info,name)
-    #导出原始数据的所有文本 作为云词用
-    generate_tieba_cloud_words_excel(info,name)
-  end 
+
+  # def self.runing_tieba_tasks(max_pn)
+  #   link_hash = {
+  #     "我们15个" => {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=#{spn}"},
+  #     "真正男子汉" => {name:"真正男子汉",link:"http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8&pn=#{spn}"},
+  #     "奇葩说" => {name:"奇葩说",link:"http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8&pn=#{spn}"},
+  #     "爸爸去哪2" => {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=#{spn}"},
+  #     "爱上超模" => {name:"爱上超模",link:"http://tieba.baidu.com/f?kw=%E7%88%B1%E4%B8%8A%E8%B6%85%E6%A8%A1&ie=utf-8&pn=#{spn}"},
+  #     "你正常吗" => {name:"你正常吗",link:"http://tieba.baidu.com/f?kw=%E4%BD%A0%E6%AD%A3%E5%B8%B8%E5%90%97&ie=utf-8&pn=#{spn}"},
+  #     "百万粉丝" => {name:"百万粉丝",link:"http://tieba.baidu.com/f?kw=%E7%99%BE%E4%B8%87%E7%B2%89%E4%B8%9D&ie=utf-8&pn=#{spn}"},
+  #     "牵手爱情村" => {name:"牵手爱情村",link:"http://tieba.baidu.com/f?kw=%E7%89%B5%E6%89%8B%E7%88%B1%E6%83%85%E6%9D%91&ie=utf-8&pn=#{spn}"}
+  #   }
+  #   link_info = link_hash["#{name}"]
+  #   name      = link_info[:name]
+  #   link      = link_info[:link]
+  #   limit     = epn
+  #   tieba     = MovieSpider::Tieba.new(link,Rails.root.to_s + '/cookies.txt',limit)
+  #   res       = tieba.start_crawl
+  #   info      = {name:name,focus:res[:focus],results:res[:results]}
+
+  #   const     = ''
+  #   const     = case name 
+  #   when '我们15个'
+  #     KWS
+  #   when '真正男子汉'
+  #     KWS1
+  #   when '奇葩说'
+  #     KWS2
+  #   end
+  #   #TiebaInfo.create(info)
+  #   #导出原始数据excel
+  #   #generate_tieba_original_data_excel(info,name)
+  #   #导出统计数据excel
+  #   #generate_tieba_fifteen_statistics_data_excel(info,name)
+  #   #导出原始数据的所有文本 作为云词用
+  #   #generate_tieba_cloud_words_excel(info,name)
+  #   #导出关键词文本
+  #   unless from.present?
+  #     from = to = (Date.today - 1.days).strftime('%F') 
+  #   end
+  #   generate_tieba_keyword_excel(from,to,const,info,name)
+  # end 
 
   # 导出贴吧原始数据
   # name 要导出的贴吧名
@@ -574,23 +726,98 @@ class Task
         sheet1.row(row_count + 1).replace(rw)
         row_count += 1
       end
-      book.write Rails.root.to_s + '/public/export/' + "贴吧_我们15个_统计数据_#{td.strftime('%F')}.xls"
     end
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_我们15个_统计数据_#{td.strftime('%F')}.xls"
+  end
+
+  # 导出贴吧关键词原始文本数据
+  def self.generate_tieba_keyword_excel(from,to,const,info,name,td=nil)
+    if td
+      td   = Date.parse(td)
+    else
+      td   = Date.today
+    end  
+    book   = Spreadsheet::Workbook.new  
+    sheet1 = book.create_worksheet :name => "#{name}数据"
+    sheet1.row(0).concat %w(节目名称 预警关键词  卷入关键词  人物关键词  发帖时间  主题标题  主题内容  正负判断 回帖量) 
+    row_count = 0
+
+    info[:results].each do |tid,result|
+      basic         = result[:basic]
+      date          = basic[:date].to_s.split(' ').first
+      if date && date.length > 0 && date.to_s >= from && date.to_s <= to 
+        theme_title   = basic[:title]
+        theme_content = basic[:content]
+        posts         = result[:posts]
+  
+        
+        str = ''
+        if const
+          const.each do |name,arr|
+            kwd_str = []
+            arr.each do |kwd|
+              if theme_title.to_s.match(/#{kwd}/) ||  theme_content.to_s.match(/#{kwd}/)
+                kwd_str << kwd
+              end
+            end
+            if kwd_str.length > 0
+              str += "#{name}=>(#{kwd_str.join(';')})  "
+            end
+          end
+        end
+
+        warn_words = ''
+        WARN.each do |kwd|
+          if theme_title.match(/#{kwd}/) || theme_content.match(/#{kwd}/)
+            warn_words += "  #{kwd}"
+          end
+        end
+  
+        lover_words = ''
+        LOVER.each do |kwd|
+          if theme_title.match(/#{kwd}/) || theme_content.match(/#{kwd}/)
+            lover_words += "  #{kwd}"
+          end
+        end
+  
+        begin
+          judge_value = get_value(theme_content)
+        rescue
+          judge_value = 0.0
+        end
+  
+        rw = [name,warn_words,lover_words,str,date,theme_title,theme_content,judge_value,basic[:reply].to_i]
+        sheet1.row(row_count + 1).replace(rw)
+        row_count += 1      
+
+        # posts.each do |post|
+        #   if post[:content].length > 0
+        #     rw = ['','','',post[:content]]
+        #     sheet1.row(row_count + 1).replace(rw)
+        #     row_count += 1          
+        #   end
+        # end      
+      end
+    end
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{name}_#{td.strftime('%F')}.xls"
   end
 
   # 导出饭团原始数据
   # name 要导出的数据名称
   # td 日期 表示要导出某天抓取到的数据
-  def self.generate_fantuan_original_data_excel(name=nil,td=nil)
+  def self.generate_fantuan_original_data_excel(results,from,to,name=nil,td=nil)
     # name 暂时还没有用上
     if td
       td   = Date.parse(td)
     else
       td   = Date.today
     end    
-    fantuans = Fantuan.where(:created_at.gte => td,:created_at.lt => td + 1.days)
+    #fantuans = Fantuan.where(:created_at.gte => td,:created_at.lt => td + 1.days).desc(:time)
+    fantuans = results
     book     = Spreadsheet::Workbook.new
     sheet1   = book.create_worksheet :name => "饭团原始数据"
+    row_count = 0
+=begin
     sheet1.row(0).concat %w(发帖日期  发帖人  回帖数  点赞数  标题   内容  评论时间   评论人  评论内容) 
     row_count = 0  
     fantuans.each do |ft|
@@ -603,6 +830,48 @@ class Task
         row_count += 1
       end   
     end
+=end    
+    #sheet1.row(0).concat %w(发帖日期  发帖人  回帖数  点赞数  标题   内容  关键词)
+    sheet1.row(0).concat %w(发帖日期  回帖数  点赞数  标题   内容  预警关键词  卷入关键词  人物关键词  正负)
+    fantuans.each do |ft|
+      date = ft['time'].strftime('%F')
+      if date && date.length > 0 && date >= from && date <= to 
+        str = ''
+        KWS.each do |name,arr|
+          kwd_str = []
+          arr.each do |kwd|
+            if ft['title'].match(/#{kwd}/) || ft['content'].match(/#{kwd}/)
+              kwd_str <<  kwd
+            end
+          end
+          if kwd_str.length > 0
+            str += "#{name}=>(#{kwd_str.join(';')})  "
+          end        
+        end
+        warn_str = ''
+        lover_str = ''
+  
+        WARN.each do |kwd|
+          if ft['title'].match(/#{kwd}/) || ft['content'].match(/#{kwd}/)
+            warn_str += "  #{kwd}"
+          end
+        end
+  
+        LOVER.each do |kwd|
+          if ft['title'].match(/#{kwd}/) || ft['content'].match(/#{kwd}/)
+            lover_str += "  #{kwd}"
+          end
+        end
+        begin
+          judge_value = get_value(ft['content'])
+        rescue
+          judge_value = 0.0
+        end
+        rw  = [date,ft['orireplynum'],ft['up'],ft['title'],ft['content'],warn_str,lover_str,str,judge_value]
+        sheet1.row(row_count + 1).replace(rw)
+        row_count += 1   
+      end 
+    end 
     book.write Rails.root.to_s + '/public/export/' + "饭团_原始数据_#{td.strftime('%F')}.xls"
   end
 
@@ -652,7 +921,7 @@ class Task
   end
   # 导出饭团云词数据
   # td  日期 表示要导出某天抓取到的数据
-  def self.generate_fantuan_cloud_words_excel(td)
+  def self.generate_fantuan_cloud_words_excel(td=nil)
     if td
       td   = Date.parse(td)
     else
