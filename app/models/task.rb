@@ -472,34 +472,7 @@ class Task
   def self.runing_tieba_history_data_tasks
     #通常情况用下面的函数
     #runing_tieba_tasks
-    
     #如果某个贴吧的量太大,可以使用下面的方法
-    # tmp_hash = {
-    #   "我们15个" => {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",max_pn:35000},
-    #   "爸爸去哪2" => {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:80000}
-    # }
-    # thread_wrap = []
-    # tmp_hash.each do |name,hash|
-    #   thread_wrap << Thread.new {
-    #     threads = []
-    #     max_pn  = hash[:max_pn] 
-    #     (0..max_pn).each_slice(1000) do |pn_arr|
-    #       threads << Thread.new {
-    #         spn   = pn_arr.first 
-    #         epn   = pn_arr.last 
-    #         link  = tmp_hash[name][:link].gsub(/pn=0/,"pn=#{spn}")
-    #         limit = epn 
-    #         tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
-    #         res   = tieba.start_crawl
-    #         TiebaInfo.save_history_data(name,res)
-    #       }
-    #     end
-    #     threads.each { |thr| thr.join }
-    #   }
-    # end
-    # thread_wrap.each { |thr| thr.join }
-
- 
     #hash = {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",max_pn:35000}
     hash = {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:80000}
 
@@ -543,6 +516,28 @@ class Task
       }    
     end
     threads.each { |thr| thr.join }
+  end
+
+
+  # 批量导出报表
+  def self.stuff_import_tieba_reports(hash)
+    # hash = {
+    #   "我们15个" => {from:'2015-07-15',to:'2015-07-21'},
+    #   "真正男子汉" => {from:'2015-05-26',to:'2015-06-01'},
+    #   "奇葩说" => {from:'2014-12-24',to:'2014-12-30'},
+    #   "爱上超模" => {from:'2015-04-15',to:'2014-04-21'},
+    #   "你正常吗" => {from:'2014-05-05',to:'2015-05-11'},
+    #   "百万粉丝" => {from:'2014-12-23',to:'2014-12-29'},
+    #   "牵手爱情村" => {from:'2015-02-21',to:'2015-02-27'},
+    #   "爸爸去哪2" => {from:'2015-02-21',to:'2015-02-27'}
+    # }
+    threads = []
+    hash.each do |name,val|
+      threads << Thread.new {
+        Task.import_tieba_reports(val[:from],val[:to],name)
+      }
+    end
+    threads.each { |thr| thr.join }    
   end
 
   # 导出贴吧报表
@@ -808,25 +803,37 @@ class Task
 
   # 抓取要监测的节目的饭团历史数据
   def self.runing_fantuan_history_data_tasks
+    runing_fifteen_fantuan_tasks
   end
 
   # 饭团日监测任务
   def self.runing_fantuan_day_tasks
+    runing_fifteen_fantuan_tasks(99) #从0开是到99 共100页 2400条帖子
+  end
+
+
+  # 《我们十五个》饭团爬虫任务
+  def self.runing_fifteen_fantuan_tasks(limit=nil)
+    fantuan  = MovieSpider::Fantuan.new(limit)
+    results  = fantuan.start_crawl
+    results.each do |result|
+      fantuan = Fantuan.where(postid:result['postid']).first
+      if fantuan.present?
+        Fantuan.update_attributes(result)
+      else
+        Fantuan.create(result)
+      end
+    end
+    # 导出原始数据excel
+    #generate_fantuan_original_data_excel(results,from,to)
+    #导出统计数据excel
+    #generate_fantuan_fifteen_statistics_data_excel
+    #导出云词数据excel
+    #generate_fantuan_cloud_words_excel
   end
 
 
 
-
-
-
-  # def self.runing_day_tasks(max_pn=3000)
-  #   yestoday = (Date.today - 1.days).strftime('%F')
-  #   #饭团日监测任务
-  #   t1 = Thread.new{runing_fifteen_fantuan_tasks(yestoday,yestoday)}
-  #   t1.join
-  #   t2 = Thread.new{runing_tieba_tasks(max_pn)}
-  #   t2.join
-  # end
 
   def self.get_value(word)
     params = {poc:'s',texts:word}
@@ -837,23 +844,6 @@ class Task
     response = http.request(request)
     body = JSON.parse(response.body)
     return body['texts'][0][1]
-  end
-
-
-
-  # 《我们十五个》饭团爬虫任务
-  def self.runing_fifteen_fantuan_tasks(from,to)
-    fantuan  = MovieSpider::Fantuan.new
-    results  = fantuan.start_crawl
-    results.each do |result|
-      Fantuan.create(result)
-    end
-    # 导出原始数据excel
-    generate_fantuan_original_data_excel(results,from,to)
-    #导出统计数据excel
-    #generate_fantuan_fifteen_statistics_data_excel
-    #导出云词数据excel
-    #generate_fantuan_cloud_words_excel
   end
 
   #《我们十五个》腾讯视频直播弹幕任务

@@ -1,0 +1,17 @@
+names = {
+  "我们15个" => {from:'2015-07-15',to:'2015-07-21'},
+  "真正男子汉" => {from:'2015-05-26',to:'2015-06-01'},
+  "奇葩说" => {from:'2014-12-24',to:'2014-12-30'},
+  "爱上超模" => {from:'2015-04-15',to:'2014-04-21'},
+  "你正常吗" => {from:'2014-05-05',to:'2015-05-11'},
+  "百万粉丝" => {from:'2014-12-23',to:'2014-12-29'},
+  "牵手爱情村" => {from:'2015-02-21',to:'2015-02-27'}
+}
+threads = []
+names.each do |name,val|
+  threads << Thread.new {
+    Task.import_tieba_reports(val[:from],val[:to],name)
+  }
+end
+threads.each { |thr| thr.join }
+
