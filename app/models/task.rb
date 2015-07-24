@@ -845,9 +845,9 @@ class Task
   def self.runing_fifteen_fantuan_tasks(from,to)
     fantuan  = MovieSpider::Fantuan.new
     results  = fantuan.start_crawl
-    # results.each do |result|
-    #   Fantuan.create(result)
-    # end
+    results.each do |result|
+      Fantuan.create(result)
+    end
     # 导出原始数据excel
     generate_fantuan_original_data_excel(results,from,to)
     #导出统计数据excel
