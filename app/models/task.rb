@@ -125,7 +125,7 @@ class Task
     #hash = {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:80000}
     max_pn    = hash[:max_pn]
     threads   = []
-    (spn..max_pn).each_slice(1000) do |pn_arr|
+    (spn..max_pn).each_slice(10) do |pn_arr|
       threads << Thread.new {
         spn   = pn_arr.first 
         epn   = pn_arr.last 
@@ -134,7 +134,7 @@ class Task
         limit = epn 
         tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
         res   = tieba.start_crawl
-        TiebaInfo.save_history_data(name,res)
+        TiebaTheme.save_history_data(name,res)
       }
     end
     threads.each { |thr| thr.join }
@@ -191,7 +191,7 @@ class Task
     results.each do |result|
       fantuan = Fantuan.where(postid:result['postid']).first
       if fantuan.present?
-        Fantuan.update_attributes(result)
+        fantuan.update_attributes(result)
       else
         Fantuan.create(result)
       end
