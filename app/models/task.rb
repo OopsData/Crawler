@@ -109,14 +109,14 @@ class Task
     "章扬" => %w(章扬)    
   }
 
-  field :title, type: String
-  field :url, type: String
-  field :site, type: String
-  field :keyword,type:String
-  field :start_date,type:String
-  field :end_date,type:String
-  field :type,type:String,default:'video'
-  field :status, type: Integer,default:ENABLE
+  # field :title, type: String
+  # field :url, type: String
+  # field :site, type: String
+  # field :keyword,type:String
+  # field :start_date,type:String
+  # field :end_date,type:String
+  # field :type,type:String,default:'video'
+  # field :status, type: Integer,default:ENABLE
 
 
   # ================ batch 任务相关 start ===================
@@ -125,7 +125,7 @@ class Task
     #hash = {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:80000}
     max_pn    = hash[:max_pn]
     threads   = []
-    (0..max_pn).each_slice(1000) do |pn_arr|
+    (spn..max_pn).each_slice(1000) do |pn_arr|
       threads << Thread.new {
         spn   = pn_arr.first 
         epn   = pn_arr.last 
