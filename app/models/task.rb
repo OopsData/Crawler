@@ -157,8 +157,8 @@ class Task
   end
 
   # 饭团日监测任务
-  def self.runing_fantuan_day_tasks(max_page=99)
-    runing_fifteen_fantuan_tasks(max_page) #从0开是到99 共100页 2400条帖子
+  def self.runing_fantuan_day_tasks(max_page=199)
+    runing_fifteen_fantuan_tasks(max_page) #从0开是到199 共200页 4800条帖子
     from = to = Date.today.strftime('%F')
     import_fantuan_reports('我们15个',from,to)
   end
@@ -604,7 +604,7 @@ class Task
               post.comments.each do |cmt|
                 cont = cmt['content'].to_s
                 if cont.match(/#{kw}/)
-                  posts << {date:cmt.time.strftime('%F'),name:name}
+                  posts << {date:cmt['time'].strftime('%F'),name:name}
                 end
               end
             end
@@ -654,9 +654,9 @@ class Task
         end
       end
 
-      if comments.length > 0 
-        comments.each do |cmt|
-          cmt_date = cmt.time.strftime('%F')
+      if post.comments.length > 0 
+        post.comments.each do |cmt|
+          cmt_date = cmt['time'].strftime('%F')
           if cmt_date >= from && cmt_date <= to 
             if post_result["#{cmt_date}"]
               post_result["#{cmt_date}"] += 1
