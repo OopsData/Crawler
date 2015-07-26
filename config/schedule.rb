@@ -29,9 +29,16 @@ when 'production'
 	  runner "Task.runing_tieba_day_tasks(3000)"
 	end
 
-	every 1.day, :at => '00:01 am' do
+	every 1.day, :at => '00:05 am' do
 	  runner "Task.runing_fantuan_day_tasks(400)"
 	end	
+
+	every 1.day, :at => '00:00 am' do
+	  runner "Task.runing_tieba_history_data_tasks"
+	end	
+
+
+	
 
 	# every 3.days, :at => '17:30 pm' do 
 	# 	runner "Task.runing_fifteen_tieba_tasks"
