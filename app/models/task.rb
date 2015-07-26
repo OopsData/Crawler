@@ -125,7 +125,7 @@ class Task
     #hash = {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:80000}
     max_pn    = hash[:max_pn]
     threads   = []
-    (spn..max_pn).each_slice(10) do |pn_arr|
+    (spn..max_pn).each_slice(50) do |pn_arr|
       threads << Thread.new {
         spn   = pn_arr.first 
         epn   = pn_arr.last 
@@ -569,7 +569,7 @@ class Task
             rescue
               judge_value = 0.0
             end
-            rw = [t.name,date,people,entangle,warn,program,story,disport,feature,title,cont,judge_value,reply.to_i]
+            rw = [post.title,date,people,entangle,warn,program,story,disport,feature,title,cont,judge_value,reply.to_i]
             sheet1.row(row_count + 1).replace(rw)
             row_count += 1         
           end        

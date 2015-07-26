@@ -7,15 +7,15 @@ class TiebaPostComment
   field :date,type:String
   belongs_to :tieba_post
   
-  def self.save_post_data(post_id,comments)
+  def self.save_comment_data(post_id,comments)
   	if comments.length > 0 
   		comments.each do |cmt|
-  		  cmt   = TiebaPostComment.where(comment_id:cmt['id']).first
-  			param = {comment_id:cmt['id'],author:cmt['author'],content:cmt['content'],date:cmt['date']}
-  			unless cmt.present?
-  				cmt = self.create(param)
+  		  cmomment = TiebaPostComment.where(comment_id:cmt[:cmt_id]).first
+  			param    = {tieba_post_id:post_id,comment_id:cmt[:cmt_id],author:cmt[:author],content:cmt[:content],date:cmt[:date]}
+  			unless cmomment.present?
+  				cmomment = self.create(param)
   			else
-  				cmt.update_attributes(param)
+  				cmomment.update_attributes(param)
   			end
   		end
   	end
