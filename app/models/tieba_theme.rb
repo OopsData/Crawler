@@ -13,6 +13,7 @@ class TiebaTheme
   has_many :tieba_posts
 
   index({ name: 1 }, { background: true } )
+  index({ title: 1 }, { background: true } )
   index({ tid: 1 }, { background: true } )
   index({ date: 1 }, { background: true } )
 

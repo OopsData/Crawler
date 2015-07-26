@@ -5,6 +5,11 @@ class TiebaPost
   field :author,type:String  
   field :content,type:String  
   field :date,type:String
+
+  index({ post_id: 1 }, { background: true } )
+  index({ date: 1 }, { background: true } )
+  index({ tieba_theme_id: 1 }, { background: true } )
+
   belongs_to :tieba_theme	
   has_many :tieba_post_comments
   def self.save_post_data(theme_id,posts)

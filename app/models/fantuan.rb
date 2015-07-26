@@ -13,6 +13,7 @@ class Fantuan
   field :time,type:DateTime
   field :comments,type:Array
 
-
+  index({ title: 1 }, { background: true } )
+  index({ postid: 1 }, { background: true } )
 
 end

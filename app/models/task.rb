@@ -157,8 +157,8 @@ class Task
   end
 
   # 饭团日监测任务
-  def self.runing_fantuan_day_tasks(max_page=199)
-    runing_fifteen_fantuan_tasks(max_page) #从0开是到199 共200页 4800条帖子
+  def self.runing_fantuan_day_tasks(max_page=399)
+    runing_fifteen_fantuan_tasks(max_page) #从0开是到199 共200页 9600条帖子
     from = to = Date.today.strftime('%F')
     import_fantuan_reports('我们15个',from,to)
   end
