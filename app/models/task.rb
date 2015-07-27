@@ -174,7 +174,7 @@ class Task
         limit = max_pn.present? ? max_pn : hash[:max_pn]
         tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
         res   = tieba.start_crawl
-        TiebaInfo.save_history_data(name,res)
+        TiebaTheme.save_history_data(name,res)
       }    
     end
     threads.each { |thr| thr.join }
