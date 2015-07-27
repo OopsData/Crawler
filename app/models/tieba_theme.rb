@@ -11,6 +11,7 @@ class TiebaTheme
   field :reply,type:Integer # 主题回帖数
 
   has_many :tieba_posts
+  has_many :posts, class_name: "TiebaPost"
 
   index({ name: 1 }, { background: true } )
   index({ title: 1 }, { background: true } )

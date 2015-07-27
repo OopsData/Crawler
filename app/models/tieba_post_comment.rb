@@ -10,8 +10,7 @@ class TiebaPostComment
   index({ date: 1 }, { background: true } )
   index({tieba_post_id: 1 }, { background: true } )
 
-  belongs_to :tieba_post
-  
+  belongs_to :tieba_post,class_name: "TiebaPost",inverse_of: :tieba_post 
   def self.save_comment_data(post_id,comments)
   	if comments.length > 0 
   		comments.each do |cmt|

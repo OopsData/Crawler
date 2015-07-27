@@ -271,14 +271,14 @@ class Task
     sheet1 = book.create_worksheet :name => "#{name}数据"
     sheet1.row(0).concat %w(节目名称  发帖时间  人物关键词  卷入关键词  预警关键词  节目关键词  剧情关键词  娱乐关键词  人物特征关键词  主题标题  主题内容  正负判断 回帖量) 
     row_count = 0
-    TiebaInfo.where(name:name).no_timeout.each do |t|
+    TiebaTheme.where(name:name).no_timeout.each do |t|
       begin
-        if t.basic['date'].present?
-          date   = t.basic['date'].split(' ').first
+        if t.date.present?
+          date   = t.date
           if date >= from && date <= to
-            title  = t.basic['title']
-            cont   = t.basic['content']
-            reply  = t.basic['reply']
+            title  = t.title
+            cont   = t.content
+            reply  = t.reply
             people = '' # 人物关键词
             if people_kwds
               people_kwds.each do |name,arr|
@@ -370,29 +370,30 @@ class Task
       themes = [] # 盛放主题
       posts  = [] # 盛放回帖
       cmts   = [] # 盛放评论
-      TiebaInfo.where(name:name).no_timeout.each do |t|
-        title  = t.basic['title'].to_s
-        cont   = t.basic['content'].to_s     
+      TiebaTheme.where(name:name).no_timeout.each do |t|
+        title  = ttitle.to_s
+        cont   = t.content.to_s
+        date   = t.date.to_s     
         people_kwds.each do |name,kws|
           kws.each do |kw|
             if title.match(/#{kw}/) || cont.match(/#{kw}/)
               if t.basic['date']
-                themes << {date:t.basic['date'].split(' ').first,name:name}
+                themes << {date:t.date,name:name}
               end
             end
             if t.posts.length > 0 
               t.posts.each do |post|
-                if post['content'].match(/#{kw}/)
-                  if post['date']
-                    posts << {date:post['date'].split(' ').first,name:name}
+                if post.content.match(/#{kw}/)
+                  if post.date
+                    posts << {date:post.date,name:name}
                   end
                 end
-                comments = post['comments']
+                comments = post.comments
                 if comments && comments.length > 0 
                   comments.each do |cmt|
-                    if cmt['content'].match(/#{kw}/)
-                      if cmt['date']
-                        cmts << {date:cmt['date'].split(' ').first,name:name}
+                    if cmt.content.match(/#{kw}/)
+                      if cmt.date
+                        cmts << {date:cmt.date,name:name}
                       end
                     end
                   end
@@ -435,40 +436,41 @@ class Task
     post_result  = {} 
     cmt_result   = {}
 
-    TiebaInfo.where(name:name).no_timeout.each do |t|
-      basic = t.basic
-      posts = t.posts
-      if basic['date'] 
-        theme_date = basic['date'].split(' ').first
-        if theme_date >= from && theme_date <= to 
-           if theme_result["#{theme_date}"]
-              theme_result["#{theme_date}"] += 1
+    TiebaTheme.where(name:name).no_timeout.each do |t|
+      date  = t.date
+      if date
+        if date >= from && date <= to 
+           if theme_result["#{date}"]
+              theme_result["#{date}"] += 1
            else
-              theme_result["#{theme_date}"] = 1
+              theme_result["#{date}"] = 1
            end       
         end
       end
-      posts.each do |post|
-        if post['date']
-          post_date = post['date'].split(' ').first
-          if post_date >= from && post_date <= to 
-            if post_result["#{post_date}"]
-              post_result["#{post_date}"] += 1
-            else
-              post_result["#{post_date}"] = 1 
+      posts = t.posts
+      if posts && posts.length > 0
+        posts.each do |post|
+          if post.date
+            post_date = post.date
+            if post_date >= from && post_date <= to 
+              if post_result["#{post_date}"]
+                post_result["#{post_date}"] += 1
+              else
+                post_result["#{post_date}"] = 1 
+              end
             end
-          end
-        end 
-        cmts = post['comments']
-        if cmts && cmts.length > 0 
-          cmts.each do |cmt|
-            if cmt['date']
-              cmt_date = cmt['date'].split(' ').first
-              if cmt_date >= from && cmt_date <= to 
-                if cmt_result["#{cmt_date}"]
-                  cmt_result["#{cmt_date}"] += 1
-                else
-                  cmt_result["#{cmt_date}"] = 1  
+          end 
+          cmts = post.comments
+          if cmts && cmts.length > 0 
+            cmts.each do |cmt|
+              if cmt.date
+                cmt_date = cmt.date
+                if cmt_date >= from && cmt_date <= to 
+                  if cmt_result["#{cmt_date}"]
+                    cmt_result["#{cmt_date}"] += 1
+                  else
+                    cmt_result["#{cmt_date}"] = 1  
+                  end
                 end
               end
             end

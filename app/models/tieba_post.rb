@@ -10,8 +10,8 @@ class TiebaPost
   index({ date: 1 }, { background: true } )
   index({ tieba_theme_id: 1 }, { background: true } )
 
-  belongs_to :tieba_theme	
-  has_many :tieba_post_comments
+  belongs_to :tieba_theme,class_name: "TiebaTheme",inverse_of: :tieba_theme 
+  has_many :comments, class_name: "TiebaPostComment"
   def self.save_post_data(theme_id,posts)
   	if posts.length > 0 
   		posts.each do |post|
