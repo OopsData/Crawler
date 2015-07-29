@@ -14,13 +14,17 @@ class TiebaPostComment
   def self.save_comment_data(post_id,comments)
   	if comments.length > 0 
   		comments.each do |cmt|
-  		  cmomment = TiebaPostComment.where(comment_id:cmt[:cmt_id]).first
-  			param    = {tieba_post_id:post_id,comment_id:cmt[:cmt_id],author:cmt[:author],content:cmt[:content],date:cmt[:date]}
-  			unless cmomment.present?
-  				cmomment = self.create(param)
-  			else
-  				cmomment.update_attributes(param)
-  			end
+        begin 
+          cmomment = TiebaPostComment.where(comment_id:cmt[:cmt_id]).first
+          param    = {tieba_post_id:post_id,comment_id:cmt[:cmt_id],author:cmt[:author],content:cmt[:content],date:cmt[:date]}
+          unless cmomment.present?
+            cmomment = self.create(param)
+          else
+            cmomment.update_attributes(param)
+          end
+        rescue
+          next
+        end
   		end
   	end
   end

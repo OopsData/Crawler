@@ -15,16 +15,20 @@ class TiebaPost
   def self.save_post_data(theme_id,posts)
   	if posts.length > 0 
   		posts.each do |post|
-  			po    = TiebaPost.where(post_id:post[:post_id]).first
-  			param = {tieba_theme_id:theme_id,post_id:post[:post_id],author:post[:author],content:post[:content],date:post[:date]}
-  			unless po.present?
-  				po = self.create(param)
-  			else
-  				po.update_attributes(param)
-  			end
-  			if post[:comments] 
-  				TiebaPostComment.save_comment_data(po.id.to_s,post[:comments])
-  			end
+        begin
+          po    = TiebaPost.where(post_id:post[:post_id]).first
+          param = {tieba_theme_id:theme_id,post_id:post[:post_id],author:post[:author],content:post[:content],date:post[:date]}
+          unless po.present?
+            po = self.create(param)
+          else
+            po.update_attributes(param)
+          end
+          if post[:comments] 
+            TiebaPostComment.save_comment_data(po.id.to_s,post[:comments])
+          end         
+        rescue
+          next
+        end
   		end
   	end
   end

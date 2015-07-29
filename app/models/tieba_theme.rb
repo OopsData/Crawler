@@ -20,15 +20,19 @@ class TiebaTheme
 
   def self.save_history_data(name,res)
   	res.each do |tid,data|
-  		theme = self.where(tid:tid).first
-      param = {name:name,tid:tid,title:data[:basic][:title],content:data[:basic][:content],author:data[:basic][:author],date:data[:basic][:date],reply:data[:basic][:reply].to_i}
-      unless theme.present?
-        theme = self.create(param)
-      else
-        theme.update_attributes(param)
-      end
-      if data[:posts]
-        TiebaPost.save_post_data(theme.id.to_s,data[:posts])
+      begin 
+        theme = self.where(tid:tid).first
+        param = {name:name,tid:tid,title:data[:basic][:title],content:data[:basic][:content],author:data[:basic][:author],date:data[:basic][:date],reply:data[:basic][:reply].to_i}
+        unless theme.present?
+          theme = self.create(param)
+        else
+          theme.update_attributes(param)
+        end
+        if data[:posts]
+          TiebaPost.save_post_data(theme.id.to_s,data[:posts])
+        end
+      rescue
+        next
       end
   	end
   end
