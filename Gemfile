@@ -59,3 +59,5 @@ gem 'movie_spider', :path => "../movie_spider"
 gem 'jquery-turbolinks'
 gem 'grape'
 gem "hashie_rails"
+gem 'elasticsearch-persistence', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
+gem 'rest_client'

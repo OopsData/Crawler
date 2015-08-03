@@ -26,12 +26,13 @@ set :output, {
 case @environment
 when 'production'
 	every 1.day, :at => '00:10 am' do
-	  runner "Task.runing_tieba_day_tasks(3000)"
+	  runner "TiebaTheme.crawl_yesterday_data(3000)"
 	end
 
 	every 1.day, :at => '00:05 am' do
-	  runner "Task.runing_fantuan_day_tasks(400)"
-	end	
+	  runner "Fantuan.crawl_yesterday_data(399)"
+	end
+
 
 	# every 1.day, :at => '00:00 am' do
 	#   runner "Task.runing_tieba_history_data_tasks"
