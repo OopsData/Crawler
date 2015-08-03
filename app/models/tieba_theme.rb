@@ -5,13 +5,13 @@ class TiebaTheme
 
   TIEBA_HASH = {
     "我们15个" => {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",max_pn:41000},
-  #  "真正男子汉" => {name:"真正男子汉",link:"http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8&pn=0",max_pn:12000},
-  #  "奇葩说" => {name:"奇葩说",link:"http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8&pn=0",max_pn:14000},
+    "真正男子汉" => {name:"真正男子汉",link:"http://tieba.baidu.com/f?kw=%E7%9C%9F%E6%AD%A3%E7%94%B7%E5%AD%90%E6%B1%89&ie=utf-8&pn=0",max_pn:12000},
+    "奇葩说" => {name:"奇葩说",link:"http://tieba.baidu.com/f?kw=%E5%A5%87%E8%91%A9%E8%AF%B4&ie=utf-8&pn=0",max_pn:14000},
     "爸爸去哪2" => {name:"爸爸去哪2",link:"http://tieba.baidu.com/f?kw=%E7%88%B8%E7%88%B8%E5%8E%BB%E5%93%AA%E5%84%BF&ie=utf-8&pn=0",max_pn:90000}
-  #  "爱上超模" => {name:"爱上超模",link:"http://tieba.baidu.com/f?kw=%E7%88%B1%E4%B8%8A%E8%B6%85%E6%A8%A1&ie=utf-8&pn=0",max_pn:1800},
-  #  "你正常吗" => {name:"你正常吗",link:"http://tieba.baidu.com/f?kw=%E4%BD%A0%E6%AD%A3%E5%B8%B8%E5%90%97&ie=utf-8&pn=0",max_pn:1100},
-  #  "百万粉丝" => {name:"百万粉丝",link:"http://tieba.baidu.com/f?kw=%E7%99%BE%E4%B8%87%E7%B2%89%E4%B8%9D&ie=utf-8&pn=0",max_pn:2100},
-  #  "牵手爱情村" => {name:"牵手爱情村",link:"http://tieba.baidu.com/f?kw=%E7%89%B5%E6%89%8B%E7%88%B1%E6%83%85%E6%9D%91&ie=utf-8&pn=0",max_pn:700}
+    "爱上超模" => {name:"爱上超模",link:"http://tieba.baidu.com/f?kw=%E7%88%B1%E4%B8%8A%E8%B6%85%E6%A8%A1&ie=utf-8&pn=0",max_pn:1800},
+    "你正常吗" => {name:"你正常吗",link:"http://tieba.baidu.com/f?kw=%E4%BD%A0%E6%AD%A3%E5%B8%B8%E5%90%97&ie=utf-8&pn=0",max_pn:1100},
+    "百万粉丝" => {name:"百万粉丝",link:"http://tieba.baidu.com/f?kw=%E7%99%BE%E4%B8%87%E7%B2%89%E4%B8%9D&ie=utf-8&pn=0",max_pn:2100},
+    "牵手爱情村" => {name:"牵手爱情村",link:"http://tieba.baidu.com/f?kw=%E7%89%B5%E6%89%8B%E7%88%B1%E6%83%85%E6%9D%91&ie=utf-8&pn=0",max_pn:700}
   }
 
   #我们15个预警关键词
