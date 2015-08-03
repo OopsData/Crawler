@@ -33,6 +33,9 @@ when 'production'
 	  runner "Fantuan.crawl_yesterday_data(399)"
 	end
 
+	every 1.day, :at => '6:00 pm' do
+	  runner "TiebaTheme.crawl_history_data"
+	end
 
 	# every 1.day, :at => '00:00 am' do
 	#   runner "Task.runing_tieba_history_data_tasks"
