@@ -428,7 +428,8 @@ class TiebaTheme
           end
         end  
       end
-
+      from = Date.parse(opt[:from])
+      to   = Date.parse(opt[:to])
       from.upto(to) do |date|
         opt[:people_kwds].each do |name,kws|
           theme_count = themes.select{|theme| theme[:date] == date.strftime('%F') && theme[:name] == name}.length
