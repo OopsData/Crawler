@@ -208,10 +208,10 @@ class TiebaTheme
     return res
   end
 
-
   # 获取情感态度值
   def self.get_feeling_value(word)
     params = {poc:'s',texts:word}
+    uri = URI.parse('http://staging.wenjuanba.com:4567/api/sent')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request.set_form_data(params)
