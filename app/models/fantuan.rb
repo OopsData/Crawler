@@ -28,7 +28,7 @@ class Fantuan
   def self.crawl_yesterday_data(max_page=399)
     runing_fantuan_tasks(max_page)
     from = to = (Date.today - 1.days).strftime('%F')
-    import_reports(from,to)
+    #import_reports(from,to)
   end
 
   def self.runing_fantuan_tasks(limit=nil)
