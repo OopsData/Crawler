@@ -197,7 +197,13 @@ class TiebaTheme
     uri   = URI('http://localhost:9200/crawler/tieba/_search')
     query = {from:from,size:1000,q:"name:#{name}"}
     uri.query = URI.encode_www_form(query)
-    res   = JSON.parse(Net::HTTP.get_response(uri).body)
+    res = nil
+    begin
+      begin
+        res   = JSON.parse(Net::HTTP.get_response(uri).body)
+      rescue
+      end
+    end while res.nil?
     res   = res['hits']['hits']
     return res
   end
