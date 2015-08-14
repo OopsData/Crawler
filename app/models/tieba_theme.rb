@@ -142,7 +142,7 @@ class TiebaTheme
     TIEBA_HASH.each do |name,hash|
       threads << Thread.new {
         runing_history_tasks(0,hash,max_pn)
-        generate_reports(name,from,to)
+        #generate_reports(name,from,to)
       }
     end
     threads.each {|thr| thr.join}
