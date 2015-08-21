@@ -178,7 +178,7 @@ class TiebaTheme
   def self.runing_history_tasks(spn,hash,max_pn=nil)
     max_pn    ||= hash[:max_pn]
     threads   = []
-    (spn...max_pn).each_slice(1200) do |pn_arr|
+    (spn...max_pn).each_slice(3000) do |pn_arr|
       threads << Thread.new {
         spn   = pn_arr.first 
         epn   = pn_arr.last 
