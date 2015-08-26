@@ -139,6 +139,39 @@ class TiebaTheme
     "郭蕾"   => %w(郭蕾 郭磊 蕾蕾)  
   }  
 
+  # 抗战阅兵
+  def self.crawl_tieba_keywords(kwd)
+    tball = MovieSpider::Tball.new(kwd)
+    results = tball.start_crawl
+    book    = Spreadsheet::Workbook.new 
+    sheet1  = book.create_worksheet :name => "#{kwd}数据"
+    sheet1.row(0).concat %w(日期  作者  回复数  标题  内容  情感分析)    
+    row_count = 0
+    from = '2015-08-10'
+    to   = '2015-08-21'    
+    results.each do |data|
+      url  = "http://localhost:9200/crawler/tieba/#{data[:tid]}"
+      if data[:date] && data[:date] >= from && data[:date] <= to 
+        begin
+          judge_value = get_feeling_value(data[:content])
+        rescue
+          judge_value = 0.0
+        end
+        rw = [data[:date],data[:author][:name],data[:reply],data[:title],data[:content],judge_value]
+        sheet1.row(row_count + 1).replace(rw)
+        row_count += 1        
+      end
+      data.merge!({name:kwd})
+      begin
+        data = JSON.generate(data)
+        RestClient.put "#{url}", data, {:content_type => :json}
+      rescue
+        next
+      end  
+    end 
+    book.write Rails.root.to_s + '/public/export/' + "贴吧_#{kwd}_关键词数据_#{from}_#{to}.xls"    
+  end
+
   #获取贴吧历史数据
   #如果传递了spn和具体的hash,则抓取具体的某个贴吧的帖子
   #hash 格式如 {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",max_pn:36000}
@@ -198,8 +231,8 @@ class TiebaTheme
   	res.each do |tid,data|
       url = "http://localhost:9200/crawler/tieba/#{tid}"
       data.merge!({name:name,tid:tid})
-      data = JSON.generate(data)
       begin
+        data = JSON.generate(data)
         RestClient.put "#{url}", data, {:content_type => :json}
       rescue
         next
@@ -504,50 +537,52 @@ class TiebaTheme
         source  = res['_source']
         basic   = source['basic']
         posts   = source['posts']
-        date    = basic['date']
-        title   = basic['title']
-        cont    = basic['content']      
-        if source['name'] == name 
-          if date
-            if date >= from && date <= to 
-              if theme_result["#{date}"]
-                 theme_result["#{date}"] += 1
-              else
-                 theme_result["#{date}"] = 1
-              end           
+        if basic && posts
+          date    = basic['date']
+          title   = basic['title']
+          cont    = basic['content']  
+          if source['name'] == name 
+            if date
+              if date >= from && date <= to 
+                if theme_result["#{date}"]
+                   theme_result["#{date}"] += 1
+                else
+                   theme_result["#{date}"] = 1
+                end           
+              end
             end
-          end
-  
-          if posts && posts.length > 0
-            posts.each do |post|
-              if post['date']
-                post_date = post['date']
-                if post_date >= from && post_date <= to 
-                  if post_result["#{post_date}"]
-                    post_result["#{post_date}"] += 1
-                  else
-                    post_result["#{post_date}"] = 1 
+    
+            if posts && posts.length > 0
+              posts.each do |post|
+                if post['date']
+                  post_date = post['date']
+                  if post_date >= from && post_date <= to 
+                    if post_result["#{post_date}"]
+                      post_result["#{post_date}"] += 1
+                    else
+                      post_result["#{post_date}"] = 1 
+                    end
                   end
-                end
-              end 
-              cmts = post['comments']
-              if cmts && cmts.length > 0 
-                cmts.each do |cmt|
-                  if cmt['date']
-                    cmt_date = cmt['date']
-                    if cmt_date >= from && cmt_date <= to 
-                      if cmt_result["#{cmt_date}"]
-                        cmt_result["#{cmt_date}"] += 1
-                      else
-                        cmt_result["#{cmt_date}"] = 1  
+                end 
+                cmts = post['comments']
+                if cmts && cmts.length > 0 
+                  cmts.each do |cmt|
+                    if cmt['date']
+                      cmt_date = cmt['date']
+                      if cmt_date >= from && cmt_date <= to 
+                        if cmt_result["#{cmt_date}"]
+                          cmt_result["#{cmt_date}"] += 1
+                        else
+                          cmt_result["#{cmt_date}"] = 1  
+                        end
                       end
                     end
                   end
                 end
               end
-            end
-          end      
-        end
+            end      
+          end                   
+        end        
       end           
     end
     dates = theme_result.keys.concat(post_result.keys).concat(cmt_result.keys).uniq.sort
