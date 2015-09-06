@@ -103,6 +103,8 @@ class Fantuan
         begin
           if date.present?
             if date >= from && date <= to
+              puts title 
+              puts '--------------------'
               people = '' # 人物关键词
               if opt[:people_kwds]
                 opt[:people_kwds].each do |name,arr|
