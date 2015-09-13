@@ -181,45 +181,65 @@ class TiebaTheme
   #hash 格式如 {name:"我们15个",link:"http://tieba.baidu.com/f?kw=%E6%88%91%E4%BB%AC15%E4%B8%AA&ie=utf-8&pn=0",max_pn:36000}
   #spn 表示从第几个帖子抓起
   #如果spn和hash都没有的话 抓取TIEBA_HASH中所有列出的贴吧数据
-  def self.crawl_history_data(spn=nil,hash=nil)
-    if hash && spn 
-      runing_history_tasks(spn,hash)
-    else
-      threads = []
-      TIEBA_HASH.each do |name,hash|
-        threads << Thread.new {
-          runing_history_tasks(0,hash)
-        }
-      end
-      threads.each {|thr| thr.join}      
-    end
+  def self.crawl_history_data(spn,name)
+    hash = TIEBA_HASH["#{name}"]
+    runing_history_tasks(spn,name)
+    # if hash && spn 
+    #   runing_history_tasks(spn,name)
+    # else
+    #   threads = []
+    #   TIEBA_HASH.each do |name,hash|
+    #     threads << Thread.new {
+    #       runing_history_tasks(0,name)
+    #     }
+    #   end
+    #   threads.each {|thr| thr.join}      
+    # end
   end
 
   #从第一个帖子抓起,连续抓取3000个
   #每天后半夜开始抓取
-  def self.crawl_yesterday_data(max_pn=3000)
+  def self.crawl_yesterday_data(name,max_pn=3000)
     from = to = (Date.today -1.days).strftime('%F')
-    threads = []
-    TIEBA_HASH.each do |name,hash|
-      threads << Thread.new {
-        runing_history_tasks(0,hash,max_pn)
-        #generate_reports(name,from,to)
-      }
-    end
-    threads.each {|thr| thr.join}
+    runing_history_tasks(0,name,max_pn)
+    # TIEBA_HASH.each do |name,hash|
+    #   threads << Thread.new {
+    #     runing_history_tasks(0,hash,max_pn)
+    #     #generate_reports(name,from,to)
+    #   }
+    # end
+    #threads.each {|thr| thr.join}
   end
 
 
   # spn 开始的帖子数
   # hash 具体某个帖子的信息
-  def self.runing_history_tasks(spn,hash,max_pn=nil)
+  # def self.runing_history_tasks(spn,hash,max_pn=nil)
+  #   max_pn    ||= hash[:max_pn]
+  #   threads   = []
+  #   (spn...max_pn).each_slice(3000) do |pn_arr|
+  #     threads << Thread.new {
+  #       spn   = pn_arr.first 
+  #       epn   = pn_arr.last 
+  #       name  = hash[:name]
+  #       link  = hash[:link].gsub(/pn=0/,"pn=#{spn}")
+  #       limit = epn 
+  #       tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
+  #       res   = tieba.start_crawl
+  #       save_history_data(name,res)
+  #     }
+  #   end
+  #   threads.each { |thr| thr.join }
+  # end
+
+  def self.runing_history_tasks(spn,name,max_pn=nil)
+    hash       =  TIEBA_HASH["#{name}"]
     max_pn    ||= hash[:max_pn]
     threads   = []
     (spn...max_pn).each_slice(3000) do |pn_arr|
       threads << Thread.new {
         spn   = pn_arr.first 
         epn   = pn_arr.last 
-        name  = hash[:name]
         link  = hash[:link].gsub(/pn=0/,"pn=#{spn}")
         limit = epn 
         tieba = MovieSpider::Tieba.new(name,link,Rails.root.to_s + '/cookies.txt',limit)
@@ -229,6 +249,7 @@ class TiebaTheme
     end
     threads.each { |thr| thr.join }
   end
+
 
   #保存抓取到的数据
   def self.save_history_data(name,res)
