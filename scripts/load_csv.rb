@@ -13,6 +13,7 @@ def load_task_csv
         begin
           break if item.blank?
           item["监测节目"]
+          binding.pry
           st = item["监测日期开始日期"].gsub(/[年月]/, '-').sub('日', '')
           et = item["监测结束日期"].gsub(/[年月]/, '-').sub('日', '')
           TiebaTheme.generate_reports(item["监测节目"], st, et)
