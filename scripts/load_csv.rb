@@ -14,8 +14,8 @@ def load_task_csv
           break if item.blank?
           item["监测节目"]
           binding.pry
-          st = Time.parse(item["监测日期开始日期"].gsub(/[月日]/, '/').sub('年', ''))
-          et = Time.parse(item["监测结束日期"].gsub(/[月日]/, '/').sub('年', ''))
+          st = Time.parse(item["监测日期开始日期"].gsub(/[日年]/, ' ').sub('月', '-'))
+          et = Time.parse(item["监测结束日期"].gsub(/[日年]/, ' ').sub('月', '-'))
           TiebaTheme.generate_reports(item["监测节目"], st.strftime("%F"), et.strftime("%F"))
         rescue Exception => e
           binding.pry
