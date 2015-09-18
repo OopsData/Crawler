@@ -198,7 +198,7 @@ GEM
     multipart-post (2.0.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
-    netrc (0.7.9)
+    netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     ntlm-http (0.1.1)
@@ -245,8 +245,10 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.0)
     ref (1.0.5)
-    rest_client (1.8.3)
-      netrc (~> 0.7.7)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     rspec (3.2.0)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
@@ -337,7 +339,7 @@ DEPENDENCIES
   movie_spider!
   pry
   rails (= 4.2.0)
-  rest_client
+  rest-client
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   spring
