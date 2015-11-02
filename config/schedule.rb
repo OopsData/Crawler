@@ -29,6 +29,31 @@ when 'production'
     every 1.day, :at => '00:05 am' do
       runner "Fantuan.crawl_yesterday_data(399)"
     end
+    # ==================================================
+    every 1.day, :at => '03:00 am' do
+      runner "TiebaPost.crawl_yesterday_data('我们15个')"
+    end
+    every 1.day, :at => '03:15 am' do
+      runner "TiebaPost.crawl_yesterday_data('完美假期')"
+    end
+    every 1.day, :at => '03:30 am' do
+      runner "TiebaPost.crawl_yesterday_data('最强小孩')"
+    end
+    every 1.day, :at => '03:45 am' do
+      runner "TiebaPost.crawl_yesterday_data('变形记')"
+    end    
+    every 1.day, :at => '04:00 am' do
+      runner "TiebaPost.crawl_yesterday_data('中国好声音')"
+    end
+    every 1.day, :at => '04:15 am' do
+      runner "TiebaPost.crawl_yesterday_data('爸爸回来了')"
+    end
+    every 1.day, :at => '04:30 am' do
+      runner "TiebaPost.crawl_yesterday_data('挑战者联盟')"
+    end
+    every 1.day, :at => '04:45 am' do
+      runner "TiebaPost.crawl_yesterday_data('为她而战')"
+    end    
 end
 
 
